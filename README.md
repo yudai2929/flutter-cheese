@@ -1,4 +1,4 @@
-# cheese_client
+# flutter-demo
 
 A new Flutter project.
 
