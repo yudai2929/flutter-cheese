@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'screens/submit.dart';
 import 'screens/my_page/screen.dart';
 import 'screens/map.dart';
-import 'screens/home.dart';
+import 'screens/home/screem.dart';
 import 'screens/route.dart';
 
 class MyApp extends StatelessWidget {
