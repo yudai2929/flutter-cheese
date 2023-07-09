@@ -1,4 +1,3 @@
-import 'package:cheese_client/src/components/ui/bottom_navigation.dart';
 import 'package:cheese_client/src/components/ui/header.dart';
 import 'package:cheese_client/src/constants/route.dart';
 import 'package:flutter/gestures.dart';
@@ -20,7 +19,6 @@ class SignUpScreen extends StatelessWidget {
             color: Colors.black,
           ),
         ),
-        bottomNavigationBar: BottomNavigation(),
         body: Container(
           padding: const EdgeInsets.all(32.0),
           child: Column(
@@ -97,7 +95,7 @@ class SignUpScreen extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, ScreenRoutes.home);
+                        Navigator.pushNamed(context, ScreenRoutes.index);
                       },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(12.0),

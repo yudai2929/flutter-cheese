@@ -2,14 +2,16 @@ import 'package:cheese_client/src/constants/route.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavigation extends StatefulWidget {
-  const BottomNavigation({Key? key}) : super(key: key);
+  final String activeScreen;
+
+  const BottomNavigation({Key? key, required this.activeScreen})
+      : super(key: key);
 
   @override
   State<BottomNavigation> createState() => _BottomNavigationState();
 }
 
 class _BottomNavigationState extends State<BottomNavigation> {
-  int _selectedIndex = 0;
   final _screens = [
     ScreenRoutes.home,
     ScreenRoutes.map,
@@ -19,16 +21,16 @@ class _BottomNavigationState extends State<BottomNavigation> {
   ];
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    Navigator.pushNamed(context, _screens[index]);
+    Navigator.pushNamed(
+      context,
+      _screens[index],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      currentIndex: _selectedIndex,
+      currentIndex: _screens.indexOf(widget.activeScreen),
       onTap: _onItemTapped,
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(

@@ -1,3 +1,5 @@
+import 'package:cheese_client/src/components/ui/bottom_navigation.dart';
+import 'package:cheese_client/src/constants/route.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
