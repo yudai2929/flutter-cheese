@@ -5,11 +5,11 @@ import 'package:cheese_client/src/screens/sing_up/screen.dart';
 import 'package:cheese_client/src/styles/material_color.dart';
 import 'package:flutter/material.dart';
 
-import 'screens/submit.dart';
+import 'screens/submit/screen.dart';
 import 'screens/my_page/screen.dart';
-import 'screens/map.dart';
+import 'screens/map/screen.dart';
 import 'screens/home/screem.dart';
-import 'screens/route.dart';
+import 'screens/route/screnn.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({

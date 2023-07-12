@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'home/screem.dart';
-import 'map.dart';
+import 'map/screen.dart';
 import 'my_page/screen.dart';
-import 'route.dart';
-import 'submit.dart';
+import 'route/screnn.dart';
+import 'submit/screen.dart';
 
 class MainRouter extends StatefulWidget {
   const MainRouter({Key? key}) : super(key: key);
