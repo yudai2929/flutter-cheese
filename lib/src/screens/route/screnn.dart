@@ -1,23 +1,37 @@
 import 'package:cheese_client/src/components/ui/header.dart';
 import 'package:flutter/material.dart';
 
-class RouteScreen extends StatelessWidget {
+class RouteScreen extends StatefulWidget {
   const RouteScreen({Key? key}) : super(key: key);
+
+  @override
+  _RouteScreenState createState() => _RouteScreenState();
+}
+
+class _RouteScreenState extends State<RouteScreen> {
+  List<String> routes = ['ルート1', 'ルート2', 'ルート3'];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const Header(title: "ルート一覧"),
-      body:
-          const Center(child: Text('ルート一覧', style: TextStyle(fontSize: 32.0))),
+      body: ListView.builder(
+        itemCount: routes.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(routes[index]),
+            onTap: () {
+              // Navigator.pushNamed(context, '/route/${routes[index]}');
+            },
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          print("ルート追加");
+          // Navigator.pushNamed(context, '/route/new');
         },
         backgroundColor: Colors.black,
-        child: const Icon(
-          Icons.add,
-        ),
+        child: Icon(Icons.add),
       ),
     );
   }
