@@ -1,5 +1,5 @@
 import 'package:cheese_client/src/components/ui/header.dart';
-import 'package:cheese_client/src/screens/my_page/snap_post_card.dart';
+import 'package:cheese_client/src/pages/my_page/snap_post_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

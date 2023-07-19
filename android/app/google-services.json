@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "898344634206",
+    "project_id": "cheese-staging",
+    "storage_bucket": "cheese-staging.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:898344634206:android:b319ba2b8de6dd545231cf",
+        "android_client_info": {
+          "package_name": "com.example.cheese_client"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "898344634206-6g547stdke4eaqlh2kor3c0s904l3q8v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwSkJBrXqFKyZNXAE3tFNXMpieFXIgteE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "898344634206-6g547stdke4eaqlh2kor3c0s904l3q8v.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "898344634206-11ioidkr25cj2n77uk1dub2jt82v70do.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.cheeseClient"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
