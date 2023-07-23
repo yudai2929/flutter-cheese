@@ -1,37 +1,27 @@
-import 'package:cheese_client/src/constants/route.dart';
+import 'package:cheese_client/src/router/page_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-class BottomNavigation extends StatefulWidget {
-  final String activeScreen;
-
-  const BottomNavigation({Key? key, required this.activeScreen})
-      : super(key: key);
-
-  @override
-  State<BottomNavigation> createState() => _BottomNavigationState();
-}
-
-class _BottomNavigationState extends State<BottomNavigation> {
-  final _screens = [
-    ScreenRoutes.home,
-    ScreenRoutes.map,
-    ScreenRoutes.submit,
-    ScreenRoutes.route,
-    ScreenRoutes.myPage
+class BottomNavigation extends StatelessWidget {
+  final _pages = [
+    PageRoutes.home,
+    PageRoutes.map,
+    PageRoutes.submit,
+    PageRoutes.route,
+    PageRoutes.myPage
   ];
 
-  void _onItemTapped(int index) {
-    Navigator.pushNamed(
-      context,
-      _screens[index],
-    );
+  BottomNavigation({super.key});
+
+  void _onItemTapped(BuildContext context, int index) {
+    context.go(_pages[index]);
   }
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      currentIndex: _screens.indexOf(widget.activeScreen),
-      onTap: _onItemTapped,
+      currentIndex: 1,
+      onTap: (index) => _onItemTapped(context, index),
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
             icon: Icon(Icons.collections_outlined), label: 'ホーム'),

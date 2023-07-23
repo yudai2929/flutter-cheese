@@ -1,8 +1,12 @@
-import 'package:cheese_client/src/pages/sign_in/sign_in_view_model.dart';
+import 'dart:io';
+
+import 'package:cheese_client/src/hooks/domain/auth/use_sign_in.dart';
+import 'package:cheese_client/src/hooks/helper/use_mutation.dart';
 import 'package:cheese_client/src/pages/sign_in/sing_in_modal.dart';
+import 'package:cheese_client/src/router/page_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 const logoPath = 'assets/images/cheese_logo.png';
 
@@ -10,9 +14,38 @@ class SignInPage extends HookWidget {
   const SignInPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final signInViewModel = useProvider(signInViewModelProvider);
+  Widget build(
+    BuildContext context,
+  ) {
+    final emailController = useTextEditingController();
+    final passwordController = useTextEditingController();
+    final mutation = useMutationSignIn();
+    final errorText = useState('');
 
+    Future<void> onPressedLogin() async {
+      mutation.mutate(
+          params: SignInParams(
+              email: emailController.text, password: passwordController.text),
+          option: MutationOption(
+            onSuccess: (res) {
+              context.go(PageRoutes.home);
+            },
+            onError: (e) {
+              errorText.value = e.toString();
+            },
+          ));
+    }
+
+    void clearErrorText() {
+      errorText.value = '';
+    }
+
+    void onPressedClose() {
+      clearErrorText();
+      context.pop();
+    }
+
+// TODO: stateが更新されても再ビルドされない
     void showModal(BuildContext context) {
       showModalBottomSheet(
           context: context,
@@ -23,9 +56,12 @@ class SignInPage extends HookWidget {
           ),
           builder: (BuildContext context) {
             return SignInModal(
-                onPressedLogin: signInViewModel.signIn,
-                onChangedEmail: signInViewModel.setEmail,
-                onChangedPassword: signInViewModel.setName);
+              errorText: errorText.value,
+              onPressedLogin: onPressedLogin,
+              onPressedClose: onPressedClose,
+              emailController: emailController,
+              passwordController: passwordController,
+            );
           });
     }
 
@@ -47,7 +83,8 @@ class SignInPage extends HookWidget {
               // TODO: ボタンコンポーネントの共通化
               SizedBox(
                   width: double.infinity,
-                  child: _signUpButton(onPressed: () {})),
+                  child: _signUpButton(
+                      onPressed: () => context.push(PageRoutes.singUp))),
               const SizedBox(height: 16.0),
               // TODO: ボタンコンポーネントの共通化
               SizedBox(

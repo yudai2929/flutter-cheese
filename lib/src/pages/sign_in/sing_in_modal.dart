@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
+import '../../styles/custom_color.dart';
 import '../../utils/form_validator.dart';
 
-// TODO: 色のハードコーディングをやめる
-const inputFieldColor = Color.fromARGB(255, 245, 245, 245);
-
-class SignInModal extends StatelessWidget {
+class SignInModal extends HookWidget {
   final VoidCallback onPressedLogin;
-  final Function(String) onChangedEmail;
-  final Function(String) onChangedPassword;
+  final VoidCallback onPressedClose;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final String? errorText;
 
-  final _formKey = GlobalKey<FormState>();
-
-  SignInModal({
+  const SignInModal({
     Key? key,
     required this.onPressedLogin,
-    required this.onChangedEmail,
-    required this.onChangedPassword,
+    required this.onPressedClose,
+    required this.emailController,
+    required this.passwordController,
+    this.errorText,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final formKey = useMemoized(GlobalKey<FormState>.new);
+
     return SizedBox(
         height: 540,
         child: Container(
@@ -31,18 +34,18 @@ class SignInModal extends StatelessWidget {
           ),
           child: Column(
             children: [
-              _header(onPressedClose: () => Navigator.pop(context)),
+              _header(onPressedClose: onPressedClose),
               const Divider(
                 thickness: 1,
               ),
               Form(
-                  key: _formKey,
+                  key: formKey,
                   child: Column(
                     children: [
                       const SizedBox(height: 32.0),
-                      _emailInputField(),
+                      _emailInputField(controller: emailController),
                       const SizedBox(height: 16.0),
-                      _passwordInputField(),
+                      _passwordInputField(controller: passwordController),
                       const SizedBox(height: 16.0),
                       Align(
                         alignment: Alignment.centerRight,
@@ -60,7 +63,7 @@ class SignInModal extends StatelessWidget {
                           width: double.infinity,
                           child: ElevatedButton(
                               onPressed: () {
-                                if (_formKey.currentState!.validate()) {
+                                if (formKey.currentState!.validate()) {
                                   onPressedLogin();
                                 }
                               },
@@ -71,6 +74,11 @@ class SignInModal extends StatelessWidget {
                               child: const Text("ログイン",
                                   style:
                                       TextStyle(fontWeight: FontWeight.bold)))),
+                      const SizedBox(height: 16.0),
+                      Text(
+                        errorText ?? '',
+                        style: TextStyle(color: CheeseColor.error),
+                      ),
                     ],
                   )),
             ],
@@ -98,26 +106,28 @@ class SignInModal extends StatelessWidget {
     );
   }
 
-  Widget _emailInputField() {
+  Widget _emailInputField({required TextEditingController controller}) {
     return TextFormField(
+      controller: controller,
       validator: FormValidator.validateEmail,
       decoration: const InputDecoration(
         border: InputBorder.none,
         hintText: 'メールアドレス',
-        fillColor: inputFieldColor,
+        fillColor: CheeseColor.input,
         filled: true,
       ),
     );
   }
 
-  Widget _passwordInputField() {
+  Widget _passwordInputField({required TextEditingController controller}) {
     return TextFormField(
+      controller: controller,
       validator: FormValidator.validatePassword,
       obscureText: true,
       decoration: const InputDecoration(
         border: InputBorder.none,
         hintText: 'パスワード',
-        fillColor: inputFieldColor,
+        fillColor: CheeseColor.input,
         filled: true,
       ),
     );

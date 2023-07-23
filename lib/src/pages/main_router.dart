@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'home/screem.dart';
+import 'home/screen.dart';
 import 'map/screen.dart';
 import 'my_page/screen.dart';
 import 'route/screnn.dart';

@@ -1,4 +1,4 @@
-class ScreenRoutes {
+class PageRoutes {
   static String index = '/main';
   static String singIn = '/sign_in';
   static String singUp = '/sing_up';
