@@ -21,7 +21,7 @@ class SignUpPage extends HookWidget {
     final formKey = useMemoized(GlobalKey<FormState>.new);
 
     Future<void> onPressedSignUp() async {
-      if (!formKey.currentState!.validate()) return;
+      // if (!formKey.currentState!.validate()) return;
       await mutation.mutate(
           params: SignUpParams(
               email: emailController.text, password: passwordController.text),

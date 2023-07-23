@@ -65,6 +65,8 @@ class SignInPage extends HookWidget {
           });
     }
 
+    if (mutation.isLoading) return const CircularProgressIndicator();
+
     return Scaffold(
         backgroundColor: Colors.white,
         body: Container(

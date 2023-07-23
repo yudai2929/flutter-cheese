@@ -63,9 +63,8 @@ class SignInModal extends HookWidget {
                           width: double.infinity,
                           child: ElevatedButton(
                               onPressed: () {
-                                if (formKey.currentState!.validate()) {
-                                  onPressedLogin();
-                                }
+                                if (!formKey.currentState!.validate()) return;
+                                onPressedLogin();
                               },
                               style: ElevatedButton.styleFrom(
                                 padding: const EdgeInsets.all(12.0),

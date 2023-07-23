@@ -39,6 +39,7 @@ class AuthRepositoryImpl implements AuthRepository {
       }
       return UserAccount(userId: user.uid, email: user.email!);
     } on FirebaseAuthException catch (e) {
+      print(e);
       _signUpError(e);
     }
     return null;
