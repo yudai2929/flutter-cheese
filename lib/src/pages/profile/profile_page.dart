@@ -1,5 +1,5 @@
 import 'package:cheese_client/src/components/ui/header.dart';
-import 'package:cheese_client/src/pages/my_page/snap_post_card.dart';
+import 'package:cheese_client/src/pages/profile/snap_post_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -8,14 +8,14 @@ const userName = 'ユーザー名';
 const dummyTitle = 'タイトル';
 const dummyTag = 'タグ';
 
-class MyPageScreen extends StatefulWidget {
-  const MyPageScreen({Key? key}) : super(key: key);
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({Key? key}) : super(key: key);
 
   @override
-  State<MyPageScreen> createState() => _MyPageScreenState();
+  State<ProfilePage> createState() => _MyPageScreenState();
 }
 
-class _MyPageScreenState extends State<MyPageScreen> {
+class _MyPageScreenState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'home/home_page.dart';
 import 'map/map_page.dart';
-import 'my_page/screen.dart';
+import 'profile/profile_page.dart';
 import 'route/screnn.dart';
 import 'submit/screen.dart';
 
@@ -19,7 +19,7 @@ class _MainRouterState extends State<MainRouter> {
     MapPage(),
     SubmitScreen(),
     RouteScreen(),
-    MyPageScreen()
+    ProfilePage()
   ];
 
   int _selectedIndex = 0;

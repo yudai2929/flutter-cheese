@@ -1,8 +1,8 @@
 import 'package:cheese_client/src/components/layout/scaffold_with_navigation_bar.dart';
 import 'package:cheese_client/src/pages/map/map_page.dart';
+import 'package:cheese_client/src/pages/profile/profile_page.dart';
 import 'package:cheese_client/src/pages/sign_in/sign_in_page.dart';
 import 'package:cheese_client/src/pages/sing_up/sing_up_page.dart';
-import 'package:cheese_client/src/pages/submit/screen.dart';
 import 'package:cheese_client/src/providers/auth_provider.dart';
 import 'package:cheese_client/src/router/page_routes.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +41,9 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             GoRoute(
                 path: PageRoutes.map,
                 builder: (context, state) => const MapPage()),
+            GoRoute(
+                path: PageRoutes.profile,
+                builder: (context, state) => const ProfilePage()),
           ],
         )
       ],

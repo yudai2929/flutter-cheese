@@ -8,7 +8,7 @@ class BottomNavigation extends StatelessWidget {
     PageRoutes.map,
     PageRoutes.submit,
     PageRoutes.route,
-    PageRoutes.myPage
+    PageRoutes.profile
   ];
 
   BottomNavigation({super.key});
@@ -22,7 +22,6 @@ class BottomNavigation extends StatelessWidget {
     // HACK: ボトムコンポーネントがページの状態を持っているのは良くない
 
     final String location = GoRouterState.of(context).location;
-
     final int index = _pages.indexOf(location) ?? 0;
     return BottomNavigationBar(
       currentIndex: index,
