@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'home/screen.dart';
-import 'map/screen.dart';
+import 'home/home_page.dart';
+import 'map/map_page.dart';
 import 'my_page/screen.dart';
 import 'route/screnn.dart';
 import 'submit/screen.dart';
@@ -15,8 +15,8 @@ class MainRouter extends StatefulWidget {
 
 class _MainRouterState extends State<MainRouter> {
   static const _screens = [
-    HomeScreen(),
-    MapScreen(),
+    HomePage(),
+    MapPage(),
     SubmitScreen(),
     RouteScreen(),
     MyPageScreen()

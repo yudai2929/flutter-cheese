@@ -19,8 +19,13 @@ class BottomNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // HACK: ボトムコンポーネントがページの状態を持っているのは良くない
+
+    final String location = GoRouterState.of(context).location;
+
+    final int index = _pages.indexOf(location) ?? 0;
     return BottomNavigationBar(
-      currentIndex: 1,
+      currentIndex: index,
       onTap: (index) => _onItemTapped(context, index),
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(

@@ -1,20 +1,27 @@
 import 'package:cheese_client/src/components/layout/scaffold_with_navigation_bar.dart';
-import 'package:cheese_client/src/pages/map/screen.dart';
+import 'package:cheese_client/src/pages/map/map_page.dart';
 import 'package:cheese_client/src/pages/sign_in/sign_in_page.dart';
 import 'package:cheese_client/src/pages/sing_up/sing_up_page.dart';
+import 'package:cheese_client/src/pages/submit/screen.dart';
 import 'package:cheese_client/src/providers/auth_provider.dart';
 import 'package:cheese_client/src/router/page_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../pages/home/screen.dart';
+import '../pages/home/home_page.dart';
+
+final GlobalKey<NavigatorState> _rootNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'root');
+final GlobalKey<NavigatorState> _shellNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'shell');
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authProvider);
 
   final goRouter = GoRouter(
-      initialLocation: PageRoutes.singIn,
+      navigatorKey: _rootNavigatorKey,
+      initialLocation: PageRoutes.home,
       routes: [
         GoRoute(
             path: PageRoutes.singIn,
@@ -22,17 +29,23 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         GoRoute(
             path: PageRoutes.singUp,
             builder: (context, state) => const SignUpPage()),
-        GoRoute(
-            path: PageRoutes.home,
-            builder: (context, state) =>
-                const ScaffoldWithNavigationBar(body: HomeScreen())),
-        GoRoute(
-            path: PageRoutes.map,
-            builder: (context, state) =>
-                const ScaffoldWithNavigationBar(body: MapScreen())),
+        ShellRoute(
+          navigatorKey: _shellNavigatorKey,
+          builder: (BuildContext context, GoRouterState state, Widget child) {
+            return ScaffoldWithNavigationBar(body: child);
+          },
+          routes: [
+            GoRoute(
+                path: PageRoutes.home,
+                builder: (context, state) => const HomePage()),
+            GoRoute(
+                path: PageRoutes.map,
+                builder: (context, state) => const MapPage()),
+          ],
+        )
       ],
 
-// リダイレクトの処理
+      // NOTE: リダイレクトの処理
       redirect: (BuildContext context, GoRouterState state) {
         final isLoggedIn = authState.data?.value != null;
 

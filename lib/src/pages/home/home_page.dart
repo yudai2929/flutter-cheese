@@ -9,14 +9,14 @@ const heartImagePath = 'assets/images/heart.png';
 const dummyImg = 'https://picsum.photos/200';
 const dummyTitle = '猫カフェ mocha 名古屋栄店';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomePage> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomePage> {
   bool _canSwipe = false;
 
   @override
