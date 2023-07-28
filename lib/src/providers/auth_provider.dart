@@ -4,5 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // ユーザーのログイン状態を維持するプロバイダー
 final authProvider = StreamProvider<User?>((ref) {
-  return FirebaseAuth.instance.authStateChanges();
+  final user = FirebaseAuth.instance.authStateChanges();
+  return user;
 });

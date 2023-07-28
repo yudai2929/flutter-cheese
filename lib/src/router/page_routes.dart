@@ -6,4 +6,5 @@ class PageRoutes {
   static String submit = '/submit';
   static String route = '/route';
   static String profile = '/profile';
+  static String profileRegistration = '/profile/registration';
 }

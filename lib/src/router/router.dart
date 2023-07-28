@@ -1,9 +1,13 @@
 import 'package:cheese_client/src/components/layout/scaffold_with_navigation_bar.dart';
 import 'package:cheese_client/src/pages/map/map_page.dart';
 import 'package:cheese_client/src/pages/profile/profile_page.dart';
+import 'package:cheese_client/src/pages/profile_register/profile_registration_page.dart';
 import 'package:cheese_client/src/pages/sign_in/sign_in_page.dart';
 import 'package:cheese_client/src/pages/sing_up/sing_up_page.dart';
 import 'package:cheese_client/src/providers/auth_provider.dart';
+import 'package:cheese_client/src/providers/page_provider.dart';
+import 'package:cheese_client/src/providers/profile_provider.dart';
+import 'package:cheese_client/src/repositories/auth/auth_repository_provider.dart';
 import 'package:cheese_client/src/router/page_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -18,6 +22,11 @@ final GlobalKey<NavigatorState> _shellNavigatorKey =
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authProvider);
+  final userState = ref.watch(userProvider);
+  final pageNotifier = ref.read(pageProvider.notifier);
+
+  // final rpo = ref.watch(authRepositoryProvider);
+  // rpo.signOut();
 
   final goRouter = GoRouter(
       navigatorKey: _rootNavigatorKey,
@@ -29,8 +38,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         GoRoute(
             path: PageRoutes.singUp,
             builder: (context, state) => const SignUpPage()),
+        GoRoute(
+            path: PageRoutes.profileRegistration,
+            builder: (context, state) => const ProfileRegistrationPage()),
         ShellRoute(
-          navigatorKey: _shellNavigatorKey,
+          // navigatorKey: _shellNavigatorKey,
           builder: (BuildContext context, GoRouterState state, Widget child) {
             return ScaffoldWithNavigationBar(body: child);
           },
@@ -50,20 +62,32 @@ final goRouterProvider = Provider<GoRouter>((ref) {
 
       // NOTE: リダイレクトの処理
       redirect: (BuildContext context, GoRouterState state) {
-        final isLoggedIn = authState.data?.value != null;
+        final isLoading = authState.isLoading;
 
+        if (isLoading) return null;
+
+        final isLoggedIn = authState.value != null;
+
+        final isSignInPage = state.location == PageRoutes.singIn;
         final isSingUpPage = state.location == PageRoutes.singUp;
 
-        final isExistProfile = true;
+        final isProfileRegistrationPage =
+            state.location == PageRoutes.profileRegistration;
 
-        if (!isLoggedIn && !isSingUpPage) {
+        final isAuthPage =
+            isSignInPage || isSingUpPage || isProfileRegistrationPage;
+
+        if (!isLoggedIn && !isAuthPage) {
           return PageRoutes.singIn;
         }
 
-        if (isLoggedIn && !isExistProfile) {
-          // TODO: プロフィール登録ページに遷移する
-          // return PageRoutes.singUp;
+        final isExistProfile = userState != null;
+
+        if (isLoggedIn && !isExistProfile && !isProfileRegistrationPage) {
+          return PageRoutes.profileRegistration;
         }
+
+        return null;
       });
   return goRouter;
 });

@@ -1,8 +1,10 @@
+import 'package:cheese_client/src/providers/page_provider.dart';
 import 'package:cheese_client/src/router/page_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class BottomNavigation extends StatelessWidget {
+class BottomNavigation extends HookConsumerWidget {
   final _pages = [
     PageRoutes.home,
     PageRoutes.map,
@@ -13,19 +15,19 @@ class BottomNavigation extends StatelessWidget {
 
   BottomNavigation({super.key});
 
-  void _onItemTapped(BuildContext context, int index) {
-    context.go(_pages[index]);
-  }
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // HACK: ボトムコンポーネントがページの状態を持っているのは良くない
+    final pageState = ref.watch(pageProvider);
 
-    final String location = GoRouterState.of(context).location;
-    final int index = _pages.indexOf(location) ?? 0;
+    void onItemTapped(BuildContext context, int index) {
+      ref.read(pageProvider.notifier).setPage(_pages[index]);
+      context.go(_pages[index]);
+    }
+
     return BottomNavigationBar(
-      currentIndex: index,
-      onTap: (index) => _onItemTapped(context, index),
+      currentIndex: _pages.indexOf(pageState) ?? 0,
+      onTap: (index) => onItemTapped(context, index),
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
             icon: Icon(Icons.collections_outlined), label: 'ホーム'),

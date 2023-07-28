@@ -1,11 +1,12 @@
-import 'package:cheese_client/src/models/user_account.dart';
+import 'package:cheese_client/src/entities/user_account.dart';
 import 'package:cheese_client/src/repositories/auth/auth_repository.dart';
+import 'package:cheese_client/src/utils/firebase_exception.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../exceptions/auth_exception.dart';
-
 class AuthRepositoryImpl implements AuthRepository {
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseAuth _firebaseAuth;
+
+  AuthRepositoryImpl(this._firebaseAuth);
 
   @override
   Future<UserAccount?> signIn(String email, String password) async {
@@ -19,9 +20,8 @@ class AuthRepositoryImpl implements AuthRepository {
       if (user == null) return null;
       return UserAccount(userId: user.uid, email: user.email!);
     } on FirebaseAuthException catch (e) {
-      _signInError(e);
+      throw firebaseAuthException(e);
     }
-    return null;
   }
 
   @override
@@ -39,10 +39,8 @@ class AuthRepositoryImpl implements AuthRepository {
       }
       return UserAccount(userId: user.uid, email: user.email!);
     } on FirebaseAuthException catch (e) {
-      print(e);
-      _signUpError(e);
+      throw firebaseAuthException(e);
     }
-    return null;
   }
 
   @override
@@ -57,31 +55,5 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
-  }
-
-  void _signInError(FirebaseAuthException error) {
-    if (error.code == 'user-not-found') {
-      throw AuthException.userNotFound();
-    } else if (error.code == 'wrong-password') {
-      throw AuthException.wrongPassword();
-    } else if (error.code == 'user-disabled') {
-      throw AuthException.userDisabled();
-    } else if (error.code == 'too-many-requests') {
-      throw AuthException.tooManyRequests();
-    } else {
-      throw AuthException.unknown();
-    }
-  }
-
-  void _signUpError(FirebaseAuthException error) {
-    if (error.code == 'weak-password') {
-      throw AuthException.weakPassword();
-    } else if (error.code == 'email-already-in-use') {
-      throw AuthException.emailAlreadyInUse();
-    } else if (error.code == 'too-many-requests') {
-      throw AuthException.tooManyRequests();
-    } else {
-      throw AuthException.unknown();
-    }
   }
 }
