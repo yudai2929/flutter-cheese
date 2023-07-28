@@ -26,7 +26,7 @@ class BottomNavigation extends HookConsumerWidget {
     }
 
     return BottomNavigationBar(
-      currentIndex: _pages.indexOf(pageState) ?? 0,
+      currentIndex: !_pages.contains(pageState) ? 0 : _pages.indexOf(pageState),
       onTap: (index) => onItemTapped(context, index),
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
