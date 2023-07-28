@@ -22,7 +22,7 @@ class BottomNavigation extends HookConsumerWidget {
 
     void onItemTapped(BuildContext context, int index) {
       ref.read(pageProvider.notifier).setPage(_pages[index]);
-      context.go(_pages[index]);
+      context.push(_pages[index]);
     }
 
     return BottomNavigationBar(

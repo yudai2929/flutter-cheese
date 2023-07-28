@@ -1,5 +1,6 @@
 import 'package:cheese_client/src/components/ui/header.dart';
 import 'package:cheese_client/src/hooks/domain/auth/use_sign_up.dart';
+import 'package:cheese_client/src/hooks/helper/use_form_key.dart';
 import 'package:cheese_client/src/hooks/helper/use_mutation.dart';
 import 'package:cheese_client/src/router/page_routes.dart';
 import 'package:cheese_client/src/styles/custom_color.dart';
@@ -19,10 +20,10 @@ class SignUpPage extends HookConsumerWidget {
     final emailController = useTextEditingController();
     final passwordController = useTextEditingController();
     final mutation = useSignUp(ref);
-    final formKey = useMemoized(GlobalKey<FormState>.new);
+    final formKey = useFormKey();
 
     Future<void> onPressedSignUp() async {
-      // if (!formKey.currentState!.validate()) return;
+      if (!formKey.currentState!.validate()) return;
       await mutation.mutate(
           params: SignUpParams(
               email: emailController.text, password: passwordController.text),

@@ -1,4 +1,5 @@
 import 'package:cheese_client/src/components/ui/header.dart';
+import 'package:cheese_client/src/hooks/domain/snap_post/use_fetch_snap_post.dart';
 import 'package:cheese_client/src/hooks/domain/user/use_fetch_user.dart';
 import 'package:cheese_client/src/pages/profile/snap_post_card.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,14 @@ class ProfilePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final snapshot = useFetchMyUser(ref);
+    final userSnapshot = useFetchMyUser(ref);
+    final user = userSnapshot.data;
+
+    final snapPostSnapshot = useFetchMySnapPosts(ref);
+
+    if (userSnapshot.isLoading || user == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
     return Scaffold(
         appBar: const Header(title: "マイページ"),
@@ -23,7 +31,7 @@ class ProfilePage extends HookConsumerWidget {
         // NOTE: 画面全体をスクロースするように設定
         body: SingleChildScrollView(
           child: Column(children: [
-            _profile(userName: userName, imageUrl: dummyImg),
+            _profile(userName: user.name, imageUrl: user.iconPath),
             const SizedBox(height: 8.0),
             ElevatedButton(
                 onPressed: () {},

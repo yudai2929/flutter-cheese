@@ -28,7 +28,6 @@ class UserRepositoryImpl implements UserRepository {
           _firebaseFunctions.httpsCallable('createUser');
       await callable.call(params.toJson());
     } on FirebaseFunctionsException catch (e) {
-      print(e.message);
       throw firebaseFunctionsException(e);
     }
   }
