@@ -1,18 +1,14 @@
 import 'package:cheese_client/src/components/ui/header.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class RouteScreen extends StatefulWidget {
-  const RouteScreen({Key? key}) : super(key: key);
+List<String> routes = ['ルート1', 'ルート2', 'ルート3'];
 
-  @override
-  _RouteScreenState createState() => _RouteScreenState();
-}
-
-class _RouteScreenState extends State<RouteScreen> {
-  List<String> routes = ['ルート1', 'ルート2', 'ルート3'];
+class RoutePage extends HookConsumerWidget {
+  const RoutePage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: const Header(title: "ルート一覧"),
       body: ListView.builder(

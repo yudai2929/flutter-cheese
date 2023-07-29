@@ -61,4 +61,9 @@ class CustomException implements Exception {
 
   static Exception noNotificationPermission() =>
       CustomException(message: '通知の許可がありません');
+
+  static Exception objectNotFound() =>
+      CustomException(message: 'オブジェクトが見つかりません');
+
+  static Exception cancelled() => CustomException(message: 'キャンセルされました');
 }

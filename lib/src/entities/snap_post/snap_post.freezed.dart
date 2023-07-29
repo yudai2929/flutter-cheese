@@ -251,7 +251,8 @@ class __$$_SnapPostCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(explicitToJson: true)
 class _$_SnapPost implements _SnapPost {
   const _$_SnapPost(
       {required this.snapPostId,

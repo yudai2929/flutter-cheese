@@ -6,6 +6,7 @@ part 'snap_post_params.g.dart';
 
 @freezed
 class CreateSnapPostParams with _$CreateSnapPostParams {
+  @JsonSerializable(explicitToJson: true)
   const factory CreateSnapPostParams({
     required String title,
     String? comment,

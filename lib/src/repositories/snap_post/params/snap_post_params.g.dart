@@ -26,7 +26,7 @@ Map<String, dynamic> _$$_CreateSnapPostParamsToJson(
       'comment': instance.comment,
       'longitude': instance.longitude,
       'latitude': instance.latitude,
-      'postImages': instance.postImages,
+      'postImages': instance.postImages.map((e) => e.toJson()).toList(),
       'tags': instance.tags,
     };
 

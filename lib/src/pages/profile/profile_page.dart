@@ -1,27 +1,21 @@
 import 'package:cheese_client/src/components/ui/header.dart';
-import 'package:cheese_client/src/hooks/domain/snap_post/use_fetch_snap_post.dart';
-import 'package:cheese_client/src/hooks/domain/user/use_fetch_user.dart';
+import 'package:cheese_client/src/entities/snap_post/snap_post.dart';
 import 'package:cheese_client/src/pages/profile/snap_post_card.dart';
+import 'package:cheese_client/src/pages/profile/use_fetch_profile.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-const dummyImg = 'https://picsum.photos/200';
-const userName = 'ユーザー名';
-const dummyTitle = 'タイトル';
-const dummyTag = 'タグ';
 
 class ProfilePage extends HookConsumerWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userSnapshot = useFetchMyUser(ref);
-    final user = userSnapshot.data;
+    final snapshot = useFetchProfile(ref);
+    final user = snapshot.user;
+    final mySnapPosts = snapshot.mySnapPosts;
 
-    final snapPostSnapshot = useFetchMySnapPosts(ref);
-
-    if (userSnapshot.isLoading || user == null) {
+    if (snapshot.isLoading || user == null) {
       return const Center(child: CircularProgressIndicator());
     }
 
@@ -33,59 +27,15 @@ class ProfilePage extends HookConsumerWidget {
           child: Column(children: [
             _profile(userName: user.name, imageUrl: user.iconPath),
             const SizedBox(height: 8.0),
-            ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey[100],
-                  foregroundColor: Colors.black,
-                  elevation: 0,
-                ),
-                child: const Text(
-                  "プロフィール編集・設定",
-                )),
+            _editButton(
+              onPressed: () {},
+            ),
             const SizedBox(height: 16.0),
             _tabButtons(
               onPressedMine: () {},
               onPressedLike: () {},
             ),
-            GridView.count(
-              // NOTE: GridViewの中でのアイテムのサイズを指定
-              childAspectRatio: 0.7,
-              // NOTE: GridViewの中でのアイテムの数を指定
-              crossAxisCount: 2,
-              shrinkWrap: true,
-
-              // NOTE: GridViewのスクロールを無効化
-              physics: const NeverScrollableScrollPhysics(),
-              children: const [
-                SnapPostCard(
-                  title: dummyTitle,
-                  tag: dummyTag,
-                  imageUrl: dummyImg,
-                ),
-                SnapPostCard(
-                  title: dummyTitle,
-                  tag: dummyTag,
-                  imageUrl: dummyImg,
-                ),
-                SnapPostCard(
-                  title: dummyTitle,
-                  tag: dummyTag,
-                  imageUrl: dummyImg,
-                ),
-                SnapPostCard(
-                  title: dummyTitle,
-                  tag: dummyTag,
-                  imageUrl: dummyImg,
-                ),
-                SnapPostCard(
-                  title: dummyTitle,
-                  tag: dummyTag,
-                  imageUrl: dummyImg,
-                ),
-                // )
-              ],
-            ),
+            _snapPostCardList(snapPosts: mySnapPosts),
           ]),
         ));
   }
@@ -104,9 +54,28 @@ class ProfilePage extends HookConsumerWidget {
     ]);
   }
 
+  Widget _editButton({required VoidCallback onPressed}) {
+    return ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.grey[100],
+          foregroundColor: Colors.black,
+          elevation: 0,
+        ),
+        child: const Text(
+          "プロフィール編集・設定",
+        ));
+  }
+
   Widget _tabButtons(
       {required VoidCallback onPressedMine,
       required VoidCallback onPressedLike}) {
+    const BorderRadius borderRadius = BorderRadius.only(
+      topRight: Radius.circular(4.0),
+      bottomRight: Radius.circular(0.0),
+      topLeft: Radius.circular(4.0),
+      bottomLeft: Radius.circular(0.0),
+    );
     return Row(
       children: [
         Expanded(
@@ -116,12 +85,7 @@ class ProfilePage extends HookConsumerWidget {
               elevation: 0,
               shape: const RoundedRectangleBorder(
                 side: BorderSide(color: Colors.black),
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(4.0),
-                  bottomRight: Radius.circular(0.0),
-                  topLeft: Radius.circular(4.0),
-                  bottomLeft: Radius.circular(0.0),
-                ),
+                borderRadius: borderRadius,
               ),
             ),
             child: const Icon(Icons.apps_sharp, color: Colors.white),
@@ -135,18 +99,33 @@ class ProfilePage extends HookConsumerWidget {
               shape: const RoundedRectangleBorder(
                 // アンダーラインを引く
                 side: BorderSide(color: Colors.black),
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(4.0),
-                  bottomRight: Radius.circular(0.0),
-                  topLeft: Radius.circular(4.0),
-                  bottomLeft: Radius.circular(0.0),
-                ),
+                borderRadius: borderRadius,
               ),
             ),
             child: const Icon(Icons.favorite_outline),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _snapPostCardList({required List<SnapPost> snapPosts}) {
+    return GridView.count(
+      // NOTE: GridViewの中でのアイテムのサイズを指定
+      childAspectRatio: 0.7,
+      // NOTE: GridViewの中でのアイテムの数を指定
+      crossAxisCount: 2,
+      shrinkWrap: true,
+
+      // NOTE: GridViewのスクロールを無効化
+      physics: const NeverScrollableScrollPhysics(),
+      children: snapPosts
+          .map((post) => SnapPostCard(
+                title: post.title,
+                tags: post.tags,
+                imageUrl: post.postImages.first.imagePath,
+              ))
+          .toList(),
     );
   }
 }

@@ -163,7 +163,8 @@ class __$$_CreateSnapPostParamsCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(explicitToJson: true)
 class _$_CreateSnapPostParams implements _CreateSnapPostParams {
   const _$_CreateSnapPostParams(
       {required this.title,

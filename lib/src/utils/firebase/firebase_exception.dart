@@ -47,3 +47,20 @@ Exception firebaseFunctionsException(FirebaseFunctionsException error) {
       return CustomException.unknown();
   }
 }
+
+Exception firebaseStorageException(FirebaseException error) {
+  switch (error.code) {
+    case 'storage/unauthenticated':
+      return CustomException.unauthenticated();
+    case 'storage/unauthorized':
+      return CustomException.permissionDenied();
+    case 'storage/retry-limit-exceeded':
+      return CustomException.tooManyRequests();
+    case 'storage/object-not-found':
+      return CustomException.notFound();
+    case 'storage/cancelled':
+      return CustomException.cancelled();
+    default:
+      return CustomException.unknown();
+  }
+}

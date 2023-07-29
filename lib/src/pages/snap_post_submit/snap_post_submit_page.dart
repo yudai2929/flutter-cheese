@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:cheese_client/src/components/ui/header.dart';
-import 'package:cheese_client/src/hooks/domain/snap_post/use_cureate_snap_post.dart';
+import 'package:cheese_client/src/hooks/domain/snap_post/use_create_snap_post.dart';
 import 'package:cheese_client/src/hooks/helper/use_form_key.dart';
 import 'package:cheese_client/src/hooks/helper/use_mutation.dart';
+import 'package:cheese_client/src/hooks/io/file_result.dart';
+import 'package:cheese_client/src/hooks/io/use_upload_file.dart';
 import 'package:cheese_client/src/repositories/snap_post/params/snap_post_params.dart';
 import 'package:cheese_client/src/router/page_routes.dart';
 import 'package:cheese_client/src/utils/form_validator.dart';
@@ -22,17 +26,29 @@ class SnapPostSubmitPage extends HookConsumerWidget {
     final titleController = useTextEditingController();
     final commentController = useTextEditingController();
     final formKey = useFormKey();
+    final fileMutation = useUploadFile(ref);
+    final uploadedFiles = useState<List<FileResult>>([]);
 
-    Future<void> onSubmit() async {
-      if (!formKey.currentState!.validate()) return;
-      final params = CreateSnapPostParams(
+    CreateSnapPostParams toParams() {
+      return CreateSnapPostParams(
         title: titleController.text,
         comment: commentController.text,
         longitude: 0,
         latitude: 0,
-        postImages: [],
+        postImages: uploadedFiles.value
+            .map((file) => PostImage(imagePath: file.url))
+            .toList(),
         tags: [],
       );
+    }
+
+    Future<void> onSubmit() async {
+      if (!formKey.currentState!.validate()) return;
+      if (uploadedFiles.value.isEmpty) {
+        // TODO: 写真が0枚との時ダイアログを出す
+        return;
+      }
+      final params = toParams();
       await mutation.mutate(
           params: params,
           option: MutationOption(
@@ -44,6 +60,22 @@ class SnapPostSubmitPage extends HookConsumerWidget {
 
     Future<void> onBack() async {
       context.pop();
+    }
+
+    void addFile(FileResult file) {
+      uploadedFiles.value = [...uploadedFiles.value, file];
+    }
+
+    Future<void> onUpload() async {
+      await fileMutation.mutate(
+          params: 'snapShots',
+          option: MutationOption(
+            onSuccess: (file) {
+              if (file == null) return;
+              addFile(file);
+            },
+            onError: (e) => print(e),
+          ));
     }
 
     return Scaffold(
@@ -80,7 +112,7 @@ class SnapPostSubmitPage extends HookConsumerWidget {
                   }),
               _commentInputField(commentController),
               const SizedBox(height: 48),
-              _uploadButton(onPressed: () {})
+              _uploadButton(onPressed: onUpload)
             ],
           ),
         ));

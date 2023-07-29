@@ -28,7 +28,7 @@ Map<String, dynamic> _$$_SnapPostToJson(_$_SnapPost instance) =>
     <String, dynamic>{
       'snapPostId': instance.snapPostId,
       'userId': instance.userId,
-      'postImages': instance.postImages,
+      'postImages': instance.postImages.map((e) => e.toJson()).toList(),
       'tags': instance.tags,
       'title': instance.title,
       'comment': instance.comment,
@@ -37,7 +37,7 @@ Map<String, dynamic> _$$_SnapPostToJson(_$_SnapPost instance) =>
       'postedAt': instance.postedAt,
       'updatedAt': instance.updatedAt,
       'likedCount': instance.likedCount,
-      'postedUser': instance.postedUser,
+      'postedUser': instance.postedUser.toJson(),
     };
 
 _$_PostImage _$$_PostImageFromJson(Map<String, dynamic> json) => _$_PostImage(

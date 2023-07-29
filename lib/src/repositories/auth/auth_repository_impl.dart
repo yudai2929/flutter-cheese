@@ -1,6 +1,6 @@
 import 'package:cheese_client/src/entities/user_account.dart';
 import 'package:cheese_client/src/repositories/auth/auth_repository.dart';
-import 'package:cheese_client/src/utils/firebase_exception.dart';
+import 'package:cheese_client/src/utils/firebase/firebase_exception.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthRepositoryImpl implements AuthRepository {

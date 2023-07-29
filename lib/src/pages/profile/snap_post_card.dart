@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 class SnapPostCard extends StatelessWidget {
   final String title;
-  final String tag;
+  final List<String> tags;
   final String imageUrl;
   const SnapPostCard({
     Key? key,
     required this.title,
-    required this.tag,
+    required this.tags,
     required this.imageUrl,
   }) : super(key: key);
 
@@ -17,19 +17,20 @@ class SnapPostCard extends StatelessWidget {
       color: Colors.grey[50],
       child: Column(
         children: [
-          Image.network(
-            imageUrl,
-            fit: BoxFit.cover,
+          AspectRatio(
+            aspectRatio: 1.0,
+            child: Image.network(
+              imageUrl,
+              fit: BoxFit.cover,
+            ),
           ),
           ListTile(
               title: Text(title,
                   style: const TextStyle(
                       color: Colors.black, fontWeight: FontWeight.bold)),
-              subtitle: Container(
-                child: Text(
-                  tag,
-                  style: const TextStyle(color: Colors.black),
-                ),
+              subtitle: Text(
+                tags.join(' '),
+                style: const TextStyle(color: Colors.black),
               )),
         ],
       ),

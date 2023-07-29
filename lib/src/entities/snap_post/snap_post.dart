@@ -5,6 +5,7 @@ part 'snap_post.g.dart';
 
 @freezed
 class SnapPost with _$SnapPost {
+  @JsonSerializable(explicitToJson: true)
   const factory SnapPost({
     required String snapPostId,
     required String userId,

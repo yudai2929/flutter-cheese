@@ -1,5 +1,5 @@
 import 'package:cheese_client/firebase_options.dart';
-import 'package:cheese_client/src/utils/firebase_connect_to_emlator.dart';
+import 'package:cheese_client/src/utils/firebase/firebase_connect_to_emlator.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
