@@ -50,6 +50,9 @@ dependencies:
   firebase_storage: ^11.2.5
   file_picker: ^5.3.3
   uuid: ^3.0.7
+  flutter_map: ^5.0.0
+  flutter_use_geolocation: ^0.0.3
+  geolocator: ^9.0.2
 
 dev_dependencies:
   flutter_test:

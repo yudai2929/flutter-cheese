@@ -1,18 +1,21 @@
-import 'dart:io';
-
 import 'package:cheese_client/src/components/ui/header.dart';
 import 'package:cheese_client/src/hooks/domain/snap_post/use_create_snap_post.dart';
 import 'package:cheese_client/src/hooks/helper/use_form_key.dart';
 import 'package:cheese_client/src/hooks/helper/use_mutation.dart';
 import 'package:cheese_client/src/hooks/io/file_result.dart';
 import 'package:cheese_client/src/hooks/io/use_upload_file.dart';
+import 'package:cheese_client/src/pages/snap_post_submit/map_modal.dart';
 import 'package:cheese_client/src/repositories/snap_post/params/snap_post_params.dart';
 import 'package:cheese_client/src/router/page_routes.dart';
 import 'package:cheese_client/src/utils/form_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_use_geolocation/flutter_use_geolocation.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
 final List<String> list = <String>['カテゴリー', 'Two', 'Three', 'Four'];
 
@@ -28,6 +31,8 @@ class SnapPostSubmitPage extends HookConsumerWidget {
     final formKey = useFormKey();
     final fileMutation = useUploadFile(ref);
     final uploadedFiles = useState<List<FileResult>>([]);
+    final pickedLatLng = useState<LatLng?>(null);
+    final geolocation = useGeolocation();
 
     CreateSnapPostParams toParams() {
       return CreateSnapPostParams(
@@ -78,6 +83,27 @@ class SnapPostSubmitPage extends HookConsumerWidget {
           ));
     }
 
+    void onPickedLatLng(LatLng latLng) {
+      pickedLatLng.value = latLng;
+      context.pop();
+    }
+
+    void onTapPlace() async {
+      showModalBottomSheet(
+          context: context,
+          // NOTE: trueにしないと、Containerのheightが反映されない
+          isScrollControlled: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+          ),
+          builder: (BuildContext context) {
+            return MapModal(
+              onPickedLatLng: onPickedLatLng,
+              onPressedClose: () => context.pop(),
+            );
+          });
+    }
+
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: Header(
@@ -103,7 +129,9 @@ class SnapPostSubmitPage extends HookConsumerWidget {
           child: Column(
             children: [
               _titleInputField(titleController),
-              _placeForm(),
+              _placeForm(
+                onTap: onTapPlace,
+              ),
               _categoryPullDown(
                   list: list,
                   selectedValue: dropdownValue.value,
@@ -141,7 +169,7 @@ class SnapPostSubmitPage extends HookConsumerWidget {
         maxLines: 4);
   }
 
-  Widget _placeForm() {
+  Widget _placeForm({required VoidCallback onTap}) {
     return Container(
         decoration: const BoxDecoration(
           border: Border(
@@ -155,6 +183,7 @@ class SnapPostSubmitPage extends HookConsumerWidget {
         width: double.infinity,
         height: 68,
         child: InkWell(
+          onTap: onTap,
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -170,7 +199,6 @@ class SnapPostSubmitPage extends HookConsumerWidget {
               )
             ],
           ),
-          onTap: () {},
         ));
   }
 

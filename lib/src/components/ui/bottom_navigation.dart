@@ -25,6 +25,7 @@ class BottomNavigation extends HookConsumerWidget {
       context.push(_pages[index]);
     }
 
+    // TODO: 同じページに遷移した時にボトムナビゲーションの状態が変わらないようにする
     return BottomNavigationBar(
       currentIndex: !_pages.contains(pageState) ? 0 : _pages.indexOf(pageState),
       onTap: (index) => onItemTapped(context, index),

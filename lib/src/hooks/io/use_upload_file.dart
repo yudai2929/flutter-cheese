@@ -1,4 +1,3 @@
-import 'package:cheese_client/src/exceptions/custom_exception.dart';
 import 'package:cheese_client/src/hooks/helper/use_mutation.dart';
 import 'package:cheese_client/src/hooks/io/file_result.dart';
 import 'package:cheese_client/src/repositories/storage/storage_repository_provider.dart';
