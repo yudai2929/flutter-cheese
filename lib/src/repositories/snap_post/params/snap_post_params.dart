@@ -14,6 +14,7 @@ class CreateSnapPostParams with _$CreateSnapPostParams {
     required double latitude,
     required List<PostImage> postImages,
     required List<String> tags,
+    required String address,
   }) = _CreateSnapPostParams;
 
   factory CreateSnapPostParams.fromJson(Map<String, dynamic> json) =>

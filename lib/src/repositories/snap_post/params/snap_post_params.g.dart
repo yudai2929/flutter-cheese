@@ -17,6 +17,7 @@ _$_CreateSnapPostParams _$$_CreateSnapPostParamsFromJson(
           .map((e) => PostImage.fromJson(e as Map<String, dynamic>))
           .toList(),
       tags: (json['tags'] as List<dynamic>).map((e) => e as String).toList(),
+      address: json['address'] as String,
     );
 
 Map<String, dynamic> _$$_CreateSnapPostParamsToJson(
@@ -28,6 +29,7 @@ Map<String, dynamic> _$$_CreateSnapPostParamsToJson(
       'latitude': instance.latitude,
       'postImages': instance.postImages.map((e) => e.toJson()).toList(),
       'tags': instance.tags,
+      'address': instance.address,
     };
 
 _$_PostImage _$$_PostImageFromJson(Map<String, dynamic> json) => _$_PostImage(

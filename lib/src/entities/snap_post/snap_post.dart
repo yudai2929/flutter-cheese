@@ -1,3 +1,5 @@
+import 'package:cheese_client/src/entities/snap_post/post_user.dart';
+import 'package:cheese_client/src/repositories/snap_post/params/snap_post_params.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'snap_post.freezed.dart';
@@ -19,30 +21,9 @@ class SnapPost with _$SnapPost {
     required String updatedAt,
     required int likedCount,
     required PostedUser postedUser,
+    required String address,
   }) = _SnapPost;
 
   factory SnapPost.fromJson(Map<String, dynamic> json) =>
       _$SnapPostFromJson(json);
-}
-
-@freezed
-class PostImage with _$PostImage {
-  const factory PostImage({
-    required String imagePath,
-  }) = _PostImage;
-
-  factory PostImage.fromJson(Map<String, dynamic> json) =>
-      _$PostImageFromJson(json);
-}
-
-@freezed
-class PostedUser with _$PostedUser {
-  const factory PostedUser({
-    required String userId,
-    required String name,
-    required String iconPath,
-  }) = _PostedUser;
-
-  factory PostedUser.fromJson(Map<String, dynamic> json) =>
-      _$PostedUserFromJson(json);
 }

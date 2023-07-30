@@ -1,30 +1,31 @@
+import 'package:cheese_client/src/common/option.dart';
 import 'package:cheese_client/src/components/ui/header.dart';
+import 'package:cheese_client/src/constants/lat_lng.dart';
+import 'package:cheese_client/src/entities/snap_post/tag_options.dart';
+import 'package:cheese_client/src/hooks/domain/address/use_search_address.dart';
 import 'package:cheese_client/src/hooks/domain/snap_post/use_create_snap_post.dart';
 import 'package:cheese_client/src/hooks/helper/use_form_key.dart';
 import 'package:cheese_client/src/hooks/helper/use_mutation.dart';
 import 'package:cheese_client/src/hooks/io/file_result.dart';
 import 'package:cheese_client/src/hooks/io/use_upload_file.dart';
+import 'package:cheese_client/src/pages/snap_post_submit/category_select_dialog.dart';
 import 'package:cheese_client/src/pages/snap_post_submit/map_modal.dart';
+import 'package:cheese_client/src/repositories/address/params/search_address_params.dart';
 import 'package:cheese_client/src/repositories/snap_post/params/snap_post_params.dart';
 import 'package:cheese_client/src/router/page_routes.dart';
 import 'package:cheese_client/src/utils/form_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_use_geolocation/flutter_use_geolocation.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-
-final List<String> list = <String>['カテゴリー', 'Two', 'Three', 'Four'];
 
 class SnapPostSubmitPage extends HookConsumerWidget {
   const SnapPostSubmitPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final dropdownValue = useState(list.first);
     final mutation = useCreateSnapPost(ref);
     final titleController = useTextEditingController();
     final commentController = useTextEditingController();
@@ -33,19 +34,9 @@ class SnapPostSubmitPage extends HookConsumerWidget {
     final uploadedFiles = useState<List<FileResult>>([]);
     final pickedLatLng = useState<LatLng?>(null);
     final geolocation = useGeolocation();
-
-    CreateSnapPostParams toParams() {
-      return CreateSnapPostParams(
-        title: titleController.text,
-        comment: commentController.text,
-        longitude: 0,
-        latitude: 0,
-        postImages: uploadedFiles.value
-            .map((file) => PostImage(imagePath: file.url))
-            .toList(),
-        tags: [],
-      );
-    }
+    final selectedTagOption = useState<List<Option>>([]);
+    final searchMutation = useSearchAddress(ref);
+    final searchedAddress = useState<String>('');
 
     Future<void> onSubmit() async {
       if (!formKey.currentState!.validate()) return;
@@ -53,14 +44,29 @@ class SnapPostSubmitPage extends HookConsumerWidget {
         // TODO: 写真が0枚との時ダイアログを出す
         return;
       }
-      final params = toParams();
+      if (pickedLatLng.value == null) {
+        // TODO: 場所が選択されていない時ダイアログを出す
+        return;
+      }
+      final params = CreateSnapPostParams(
+        title: titleController.text,
+        comment: commentController.text,
+        longitude: pickedLatLng.value!.longitude,
+        latitude: pickedLatLng.value!.latitude,
+        postImages: uploadedFiles.value
+            .map((file) => PostImage(imagePath: file.url))
+            .toList(),
+        tags: selectedTagOption.value.map((e) => e.value).toList(),
+        address: searchedAddress.value,
+      );
+
       await mutation.mutate(
           params: params,
-          option: MutationOption(
-              onSuccess: (_) {
-                context.go(PageRoutes.home);
-              },
-              onError: (e) {}));
+          option: MutationOption(onSuccess: (_) {
+            context.go(PageRoutes.home);
+          }, onError: (e) {
+            print(e);
+          }));
     }
 
     Future<void> onBack() async {
@@ -79,13 +85,26 @@ class SnapPostSubmitPage extends HookConsumerWidget {
               if (file == null) return;
               addFile(file);
             },
-            onError: (e) => print(e),
+            onError: (e) {
+              print(e);
+            },
           ));
     }
 
     void onPickedLatLng(LatLng latLng) {
-      pickedLatLng.value = latLng;
-      context.pop();
+      searchMutation.mutate(
+          params: SearchAddressParams(
+              latitude: latLng.latitude, longitude: latLng.longitude),
+          option: MutationOption(onSuccess: (address) {
+            pickedLatLng.value = latLng;
+            searchedAddress.value = address;
+            context.pop();
+          }, onError: (e) {
+            print(e);
+            searchedAddress.value = '住所不明';
+            // TODO: 住所が取得できないかったことを伝える
+            context.pop();
+          }));
     }
 
     void onTapPlace() async {
@@ -98,8 +117,28 @@ class SnapPostSubmitPage extends HookConsumerWidget {
           ),
           builder: (BuildContext context) {
             return MapModal(
-              onPickedLatLng: onPickedLatLng,
-              onPressedClose: () => context.pop(),
+                onPickedLatLng: onPickedLatLng,
+                onPressedClose: () => context.pop(),
+                initialLatLng: pickedLatLng.value ??
+                    LatLng(
+                        geolocation.position?.latitude ?? tokyoLatLng.latitude,
+                        geolocation.position?.longitude ??
+                            tokyoLatLng.longitude));
+          });
+    }
+
+    void onTapCategory() {
+      showDialog<void>(
+          context: context,
+          builder: (_) {
+            return CategorySelectDialog(
+              options: tagOptions.options,
+              selectedOptions: selectedTagOption.value,
+              onClose: () => context.pop(),
+              onSubmit: (value) {
+                selectedTagOption.value = value;
+                context.pop();
+              },
             );
           });
     }
@@ -129,18 +168,18 @@ class SnapPostSubmitPage extends HookConsumerWidget {
           child: Column(
             children: [
               _titleInputField(titleController),
-              _placeForm(
-                onTap: onTapPlace,
+              _placeForm(onTap: onTapPlace, address: searchedAddress.value),
+              _categoryForm(
+                onTap: onTapCategory,
+                categories:
+                    selectedTagOption.value.map((e) => e.label).toList(),
               ),
-              _categoryPullDown(
-                  list: list,
-                  selectedValue: dropdownValue.value,
-                  onChanged: (String? value) {
-                    dropdownValue.value = value!;
-                  }),
               _commentInputField(commentController),
-              const SizedBox(height: 48),
-              _uploadButton(onPressed: onUpload)
+              const SizedBox(height: 16),
+              _imageList(
+                  imageUrls: uploadedFiles.value.map((e) => e.url).toList()),
+              const SizedBox(height: 16),
+              _uploadButton(onPressed: onUpload),
             ],
           ),
         ));
@@ -169,7 +208,7 @@ class SnapPostSubmitPage extends HookConsumerWidget {
         maxLines: 4);
   }
 
-  Widget _placeForm({required VoidCallback onTap}) {
+  Widget _eventForm({required VoidCallback onTap, required String text}) {
     return Container(
         decoration: const BoxDecoration(
           border: Border(
@@ -184,16 +223,20 @@ class SnapPostSubmitPage extends HookConsumerWidget {
         height: 68,
         child: InkWell(
           onTap: onTap,
-          child: const Row(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("場所",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  )),
-              Icon(
+              Container(
+                width: 320,
+                child: Text(text,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    )),
+              ),
+              const Icon(
                 Icons.keyboard_arrow_right_outlined,
                 color: Colors.black,
               )
@@ -202,44 +245,40 @@ class SnapPostSubmitPage extends HookConsumerWidget {
         ));
   }
 
-  Widget _categoryPullDown(
-      {required List<String> list,
-      required Function(String?) onChanged,
-      required String selectedValue}) {
-    return Container(
-        decoration: const BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: Colors.grey,
-              width: 1.0,
+  Widget _placeForm({required VoidCallback onTap, required String address}) {
+    final filedText = address.isEmpty ? '場所' : address;
+    return _eventForm(onTap: onTap, text: filedText);
+  }
+
+  Widget _categoryForm(
+      {required VoidCallback onTap, required List<String> categories}) {
+    final String filedText =
+        categories.isEmpty ? 'カテゴリー' : categories.join(', ');
+    return _eventForm(onTap: onTap, text: filedText);
+  }
+
+  Widget _imageList({required List<String> imageUrls}) {
+    return SizedBox(
+      height: 120,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: imageUrls.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+            width: 100,
+            height: 100,
+            margin: const EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage(imageUrls[index]),
+                fit: BoxFit.cover,
+              ),
+              borderRadius: BorderRadius.circular(8.0),
             ),
-          ),
-        ),
-        padding: const EdgeInsets.all(16.0),
-        width: double.infinity,
-        height: 68,
-        child: DropdownButton<String>(
-          value: selectedValue,
-          iconSize: 24,
-          isExpanded: true,
-          icon: const Icon(Icons.keyboard_arrow_right_outlined,
-              color: Colors.black),
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-          underline: Container(
-            height: 0,
-          ),
-          onChanged: onChanged,
-          items: list.map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-        ));
+          );
+        },
+      ),
+    );
   }
 
   Widget _uploadButton({required VoidCallback onPressed}) {

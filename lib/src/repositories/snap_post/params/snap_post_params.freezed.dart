@@ -26,6 +26,7 @@ mixin _$CreateSnapPostParams {
   double get latitude => throw _privateConstructorUsedError;
   List<PostImage> get postImages => throw _privateConstructorUsedError;
   List<String> get tags => throw _privateConstructorUsedError;
+  String get address => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -45,7 +46,8 @@ abstract class $CreateSnapPostParamsCopyWith<$Res> {
       double longitude,
       double latitude,
       List<PostImage> postImages,
-      List<String> tags});
+      List<String> tags,
+      String address});
 }
 
 /// @nodoc
@@ -68,6 +70,7 @@ class _$CreateSnapPostParamsCopyWithImpl<$Res,
     Object? latitude = null,
     Object? postImages = null,
     Object? tags = null,
+    Object? address = null,
   }) {
     return _then(_value.copyWith(
       title: null == title
@@ -94,6 +97,10 @@ class _$CreateSnapPostParamsCopyWithImpl<$Res,
           ? _value.tags
           : tags // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      address: null == address
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -112,7 +119,8 @@ abstract class _$$_CreateSnapPostParamsCopyWith<$Res>
       double longitude,
       double latitude,
       List<PostImage> postImages,
-      List<String> tags});
+      List<String> tags,
+      String address});
 }
 
 /// @nodoc
@@ -132,6 +140,7 @@ class __$$_CreateSnapPostParamsCopyWithImpl<$Res>
     Object? latitude = null,
     Object? postImages = null,
     Object? tags = null,
+    Object? address = null,
   }) {
     return _then(_$_CreateSnapPostParams(
       title: null == title
@@ -158,6 +167,10 @@ class __$$_CreateSnapPostParamsCopyWithImpl<$Res>
           ? _value._tags
           : tags // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      address: null == address
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -172,7 +185,8 @@ class _$_CreateSnapPostParams implements _CreateSnapPostParams {
       required this.longitude,
       required this.latitude,
       required final List<PostImage> postImages,
-      required final List<String> tags})
+      required final List<String> tags,
+      required this.address})
       : _postImages = postImages,
         _tags = tags;
 
@@ -204,8 +218,11 @@ class _$_CreateSnapPostParams implements _CreateSnapPostParams {
   }
 
   @override
+  final String address;
+
+  @override
   String toString() {
-    return 'CreateSnapPostParams(title: $title, comment: $comment, longitude: $longitude, latitude: $latitude, postImages: $postImages, tags: $tags)';
+    return 'CreateSnapPostParams(title: $title, comment: $comment, longitude: $longitude, latitude: $latitude, postImages: $postImages, tags: $tags, address: $address)';
   }
 
   @override
@@ -221,7 +238,8 @@ class _$_CreateSnapPostParams implements _CreateSnapPostParams {
                 other.latitude == latitude) &&
             const DeepCollectionEquality()
                 .equals(other._postImages, _postImages) &&
-            const DeepCollectionEquality().equals(other._tags, _tags));
+            const DeepCollectionEquality().equals(other._tags, _tags) &&
+            (identical(other.address, address) || other.address == address));
   }
 
   @JsonKey(ignore: true)
@@ -233,7 +251,8 @@ class _$_CreateSnapPostParams implements _CreateSnapPostParams {
       longitude,
       latitude,
       const DeepCollectionEquality().hash(_postImages),
-      const DeepCollectionEquality().hash(_tags));
+      const DeepCollectionEquality().hash(_tags),
+      address);
 
   @JsonKey(ignore: true)
   @override
@@ -257,7 +276,8 @@ abstract class _CreateSnapPostParams implements CreateSnapPostParams {
       required final double longitude,
       required final double latitude,
       required final List<PostImage> postImages,
-      required final List<String> tags}) = _$_CreateSnapPostParams;
+      required final List<String> tags,
+      required final String address}) = _$_CreateSnapPostParams;
 
   factory _CreateSnapPostParams.fromJson(Map<String, dynamic> json) =
       _$_CreateSnapPostParams.fromJson;
@@ -274,6 +294,8 @@ abstract class _CreateSnapPostParams implements CreateSnapPostParams {
   List<PostImage> get postImages;
   @override
   List<String> get tags;
+  @override
+  String get address;
   @override
   @JsonKey(ignore: true)
   _$$_CreateSnapPostParamsCopyWith<_$_CreateSnapPostParams> get copyWith =>

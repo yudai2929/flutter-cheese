@@ -10,11 +10,13 @@ const userAgentPackageName = 'com.example.app';
 class MapModal extends HookConsumerWidget {
   final void Function(LatLng) onPickedLatLng;
   final VoidCallback onPressedClose;
+  final LatLng? initialLatLng;
 
   const MapModal({
     Key? key,
     required this.onPickedLatLng,
     required this.onPressedClose,
+    this.initialLatLng,
   }) : super(key: key);
 
   @override
@@ -25,77 +27,57 @@ class MapModal extends HookConsumerWidget {
     final modalSize = MediaQuery.of(context).size.height * modalRate;
     final mapSize = modalSize - headerSize;
 
-    final latLngState = useState<LatLng?>(null);
+    final latLngState = useState<LatLng?>(initialLatLng);
 
     void onTap(dynamic tapPosition, LatLng latLng) {
       latLngState.value = latLng;
     }
-
-    final makers = [
-      Marker(
-        width: 80.0,
-        height: 80.0,
-        point: const LatLng(51.509364, -0.128928),
-        builder: (ctx) => const Icon(
-          Icons.location_on,
-          size: 40,
-          color: Colors.red,
-        ),
-      )
-    ];
 
     void onSubmit() {
       if (latLngState.value == null) return;
       onPickedLatLng(latLngState.value!);
     }
 
-    const postion = LatLng(35.185058, 136.898777);
-
     return SizedBox(
-        child: Container(
       height: modalSize,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.0),
-      ),
+      width: modalSize,
       child: Column(
         children: [
-          SizedBox(
-            height: headerSize,
-            child: _header(onPressedClose: onPressedClose, onSubmit: onSubmit),
+          _header(
+            onPressedClose: onPressedClose,
+            onSubmit: onSubmit,
           ),
           SizedBox(
-              height: mapSize,
-              child: FlutterMap(
-                options: MapOptions(
-                  onTap: onTap,
-                  center: postion,
-                  zoom: 12.2,
+            height: mapSize,
+            child: FlutterMap(
+              options: MapOptions(
+                onTap: onTap,
+                center: initialLatLng,
+                zoom: 16.0,
+              ),
+              children: [
+                TileLayer(
+                  urlTemplate: mapUrlTemplate,
+                  userAgentPackageName: userAgentPackageName,
                 ),
-                children: [
-                  MarkerLayer(
-                      // NOTE: ロゴの配置
-                      markers: [
-                        Marker(
-                          width: 80.0,
-                          height: 80.0,
-                          point: latLngState.value ?? const LatLng(0, 0),
-                          builder: (ctx) => const Icon(
-                            Icons.location_on,
-                            size: 40,
-                            color: Colors.red,
-                          ),
-                        )
-                      ]),
-                  TileLayer(
-                    urlTemplate: mapUrlTemplate,
-                    userAgentPackageName: userAgentPackageName,
-                  ),
-                ],
-              ))
+                MarkerLayer(markers: [
+                  Marker(
+                    width: 80.0,
+                    height: 80.0,
+                    point: latLngState.value ?? const LatLng(0, 0),
+                    builder: (ctx) => const Icon(
+                      Icons.location_on,
+                      size: 40,
+                      color: Colors.red,
+                    ),
+                  )
+                ]),
+              ],
+            ),
+          ),
         ],
       ),
-    ));
+    );
   }
 
   Widget _header(

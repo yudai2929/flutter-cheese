@@ -1,5 +1,6 @@
 import 'package:cheese_client/src/components/ui/header.dart';
 import 'package:cheese_client/src/entities/snap_post/snap_post.dart';
+import 'package:cheese_client/src/entities/snap_post/tag_options.dart';
 import 'package:cheese_client/src/pages/profile/snap_post_card.dart';
 import 'package:cheese_client/src/pages/profile/use_fetch_profile.dart';
 import 'package:flutter/material.dart';
@@ -122,7 +123,7 @@ class ProfilePage extends HookConsumerWidget {
       children: snapPosts
           .map((post) => SnapPostCard(
                 title: post.title,
-                tags: post.tags,
+                tags: post.tags.map((e) => tagOptions.valueToLabel(e)).toList(),
                 imageUrl: post.postImages.first.imagePath,
               ))
           .toList(),

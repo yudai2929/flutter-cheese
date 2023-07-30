@@ -17,15 +17,23 @@ class UseQueryResult<T> {
   });
 }
 
+class QueryOptions<T> {
+  final bool enabled;
+  final void Function(T data)? onSuccess;
+  final void Function(Object? error)? onError;
+
+  QueryOptions({
+    required this.enabled,
+    this.onSuccess,
+    this.onError,
+  });
+}
+
 UseQueryResult<T> useQuery<T>({
   required Future<T> Function() queryFn,
+  // QueryOptions<T>? options,
 }) {
   final reloadKey = useState(UniqueKey());
-
-  // NOTE: keyを更新すると再フェッチされる
-  void refetch() {
-    reloadKey.value = UniqueKey();
-  }
 
   Future<T> query() async {
     try {
@@ -34,6 +42,11 @@ UseQueryResult<T> useQuery<T>({
     } on Exception catch (e) {
       return Future.error(e);
     }
+  }
+
+  // NOTE: keyを更新すると再フェッチされる
+  void refetch() {
+    reloadKey.value = UniqueKey();
   }
 
   final future = useMemoized(query, [reloadKey.value]);

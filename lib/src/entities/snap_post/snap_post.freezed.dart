@@ -32,6 +32,7 @@ mixin _$SnapPost {
   String get updatedAt => throw _privateConstructorUsedError;
   int get likedCount => throw _privateConstructorUsedError;
   PostedUser get postedUser => throw _privateConstructorUsedError;
+  String get address => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -56,7 +57,8 @@ abstract class $SnapPostCopyWith<$Res> {
       String postedAt,
       String updatedAt,
       int likedCount,
-      PostedUser postedUser});
+      PostedUser postedUser,
+      String address});
 
   $PostedUserCopyWith<$Res> get postedUser;
 }
@@ -86,6 +88,7 @@ class _$SnapPostCopyWithImpl<$Res, $Val extends SnapPost>
     Object? updatedAt = null,
     Object? likedCount = null,
     Object? postedUser = null,
+    Object? address = null,
   }) {
     return _then(_value.copyWith(
       snapPostId: null == snapPostId
@@ -136,6 +139,10 @@ class _$SnapPostCopyWithImpl<$Res, $Val extends SnapPost>
           ? _value.postedUser
           : postedUser // ignore: cast_nullable_to_non_nullable
               as PostedUser,
+      address: null == address
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 
@@ -167,7 +174,8 @@ abstract class _$$_SnapPostCopyWith<$Res> implements $SnapPostCopyWith<$Res> {
       String postedAt,
       String updatedAt,
       int likedCount,
-      PostedUser postedUser});
+      PostedUser postedUser,
+      String address});
 
   @override
   $PostedUserCopyWith<$Res> get postedUser;
@@ -196,6 +204,7 @@ class __$$_SnapPostCopyWithImpl<$Res>
     Object? updatedAt = null,
     Object? likedCount = null,
     Object? postedUser = null,
+    Object? address = null,
   }) {
     return _then(_$_SnapPost(
       snapPostId: null == snapPostId
@@ -246,6 +255,10 @@ class __$$_SnapPostCopyWithImpl<$Res>
           ? _value.postedUser
           : postedUser // ignore: cast_nullable_to_non_nullable
               as PostedUser,
+      address: null == address
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -266,7 +279,8 @@ class _$_SnapPost implements _SnapPost {
       required this.postedAt,
       required this.updatedAt,
       required this.likedCount,
-      required this.postedUser})
+      required this.postedUser,
+      required this.address})
       : _postImages = postImages,
         _tags = tags;
 
@@ -309,10 +323,12 @@ class _$_SnapPost implements _SnapPost {
   final int likedCount;
   @override
   final PostedUser postedUser;
+  @override
+  final String address;
 
   @override
   String toString() {
-    return 'SnapPost(snapPostId: $snapPostId, userId: $userId, postImages: $postImages, tags: $tags, title: $title, comment: $comment, longitude: $longitude, latitude: $latitude, postedAt: $postedAt, updatedAt: $updatedAt, likedCount: $likedCount, postedUser: $postedUser)';
+    return 'SnapPost(snapPostId: $snapPostId, userId: $userId, postImages: $postImages, tags: $tags, title: $title, comment: $comment, longitude: $longitude, latitude: $latitude, postedAt: $postedAt, updatedAt: $updatedAt, likedCount: $likedCount, postedUser: $postedUser, address: $address)';
   }
 
   @override
@@ -339,7 +355,8 @@ class _$_SnapPost implements _SnapPost {
             (identical(other.likedCount, likedCount) ||
                 other.likedCount == likedCount) &&
             (identical(other.postedUser, postedUser) ||
-                other.postedUser == postedUser));
+                other.postedUser == postedUser) &&
+            (identical(other.address, address) || other.address == address));
   }
 
   @JsonKey(ignore: true)
@@ -357,7 +374,8 @@ class _$_SnapPost implements _SnapPost {
       postedAt,
       updatedAt,
       likedCount,
-      postedUser);
+      postedUser,
+      address);
 
   @JsonKey(ignore: true)
   @override
@@ -386,7 +404,8 @@ abstract class _SnapPost implements SnapPost {
       required final String postedAt,
       required final String updatedAt,
       required final int likedCount,
-      required final PostedUser postedUser}) = _$_SnapPost;
+      required final PostedUser postedUser,
+      required final String address}) = _$_SnapPost;
 
   factory _SnapPost.fromJson(Map<String, dynamic> json) = _$_SnapPost.fromJson;
 
@@ -415,315 +434,9 @@ abstract class _SnapPost implements SnapPost {
   @override
   PostedUser get postedUser;
   @override
+  String get address;
+  @override
   @JsonKey(ignore: true)
   _$$_SnapPostCopyWith<_$_SnapPost> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-PostImage _$PostImageFromJson(Map<String, dynamic> json) {
-  return _PostImage.fromJson(json);
-}
-
-/// @nodoc
-mixin _$PostImage {
-  String get imagePath => throw _privateConstructorUsedError;
-
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $PostImageCopyWith<PostImage> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $PostImageCopyWith<$Res> {
-  factory $PostImageCopyWith(PostImage value, $Res Function(PostImage) then) =
-      _$PostImageCopyWithImpl<$Res, PostImage>;
-  @useResult
-  $Res call({String imagePath});
-}
-
-/// @nodoc
-class _$PostImageCopyWithImpl<$Res, $Val extends PostImage>
-    implements $PostImageCopyWith<$Res> {
-  _$PostImageCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? imagePath = null,
-  }) {
-    return _then(_value.copyWith(
-      imagePath: null == imagePath
-          ? _value.imagePath
-          : imagePath // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$_PostImageCopyWith<$Res> implements $PostImageCopyWith<$Res> {
-  factory _$$_PostImageCopyWith(
-          _$_PostImage value, $Res Function(_$_PostImage) then) =
-      __$$_PostImageCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String imagePath});
-}
-
-/// @nodoc
-class __$$_PostImageCopyWithImpl<$Res>
-    extends _$PostImageCopyWithImpl<$Res, _$_PostImage>
-    implements _$$_PostImageCopyWith<$Res> {
-  __$$_PostImageCopyWithImpl(
-      _$_PostImage _value, $Res Function(_$_PostImage) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? imagePath = null,
-  }) {
-    return _then(_$_PostImage(
-      imagePath: null == imagePath
-          ? _value.imagePath
-          : imagePath // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$_PostImage implements _PostImage {
-  const _$_PostImage({required this.imagePath});
-
-  factory _$_PostImage.fromJson(Map<String, dynamic> json) =>
-      _$$_PostImageFromJson(json);
-
-  @override
-  final String imagePath;
-
-  @override
-  String toString() {
-    return 'PostImage(imagePath: $imagePath)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$_PostImage &&
-            (identical(other.imagePath, imagePath) ||
-                other.imagePath == imagePath));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, imagePath);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$_PostImageCopyWith<_$_PostImage> get copyWith =>
-      __$$_PostImageCopyWithImpl<_$_PostImage>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$_PostImageToJson(
-      this,
-    );
-  }
-}
-
-abstract class _PostImage implements PostImage {
-  const factory _PostImage({required final String imagePath}) = _$_PostImage;
-
-  factory _PostImage.fromJson(Map<String, dynamic> json) =
-      _$_PostImage.fromJson;
-
-  @override
-  String get imagePath;
-  @override
-  @JsonKey(ignore: true)
-  _$$_PostImageCopyWith<_$_PostImage> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-PostedUser _$PostedUserFromJson(Map<String, dynamic> json) {
-  return _PostedUser.fromJson(json);
-}
-
-/// @nodoc
-mixin _$PostedUser {
-  String get userId => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
-  String get iconPath => throw _privateConstructorUsedError;
-
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $PostedUserCopyWith<PostedUser> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $PostedUserCopyWith<$Res> {
-  factory $PostedUserCopyWith(
-          PostedUser value, $Res Function(PostedUser) then) =
-      _$PostedUserCopyWithImpl<$Res, PostedUser>;
-  @useResult
-  $Res call({String userId, String name, String iconPath});
-}
-
-/// @nodoc
-class _$PostedUserCopyWithImpl<$Res, $Val extends PostedUser>
-    implements $PostedUserCopyWith<$Res> {
-  _$PostedUserCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? userId = null,
-    Object? name = null,
-    Object? iconPath = null,
-  }) {
-    return _then(_value.copyWith(
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      iconPath: null == iconPath
-          ? _value.iconPath
-          : iconPath // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$_PostedUserCopyWith<$Res>
-    implements $PostedUserCopyWith<$Res> {
-  factory _$$_PostedUserCopyWith(
-          _$_PostedUser value, $Res Function(_$_PostedUser) then) =
-      __$$_PostedUserCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String userId, String name, String iconPath});
-}
-
-/// @nodoc
-class __$$_PostedUserCopyWithImpl<$Res>
-    extends _$PostedUserCopyWithImpl<$Res, _$_PostedUser>
-    implements _$$_PostedUserCopyWith<$Res> {
-  __$$_PostedUserCopyWithImpl(
-      _$_PostedUser _value, $Res Function(_$_PostedUser) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? userId = null,
-    Object? name = null,
-    Object? iconPath = null,
-  }) {
-    return _then(_$_PostedUser(
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      iconPath: null == iconPath
-          ? _value.iconPath
-          : iconPath // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$_PostedUser implements _PostedUser {
-  const _$_PostedUser(
-      {required this.userId, required this.name, required this.iconPath});
-
-  factory _$_PostedUser.fromJson(Map<String, dynamic> json) =>
-      _$$_PostedUserFromJson(json);
-
-  @override
-  final String userId;
-  @override
-  final String name;
-  @override
-  final String iconPath;
-
-  @override
-  String toString() {
-    return 'PostedUser(userId: $userId, name: $name, iconPath: $iconPath)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$_PostedUser &&
-            (identical(other.userId, userId) || other.userId == userId) &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.iconPath, iconPath) ||
-                other.iconPath == iconPath));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, userId, name, iconPath);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$_PostedUserCopyWith<_$_PostedUser> get copyWith =>
-      __$$_PostedUserCopyWithImpl<_$_PostedUser>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$_PostedUserToJson(
-      this,
-    );
-  }
-}
-
-abstract class _PostedUser implements PostedUser {
-  const factory _PostedUser(
-      {required final String userId,
-      required final String name,
-      required final String iconPath}) = _$_PostedUser;
-
-  factory _PostedUser.fromJson(Map<String, dynamic> json) =
-      _$_PostedUser.fromJson;
-
-  @override
-  String get userId;
-  @override
-  String get name;
-  @override
-  String get iconPath;
-  @override
-  @JsonKey(ignore: true)
-  _$$_PostedUserCopyWith<_$_PostedUser> get copyWith =>
       throw _privateConstructorUsedError;
 }
