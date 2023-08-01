@@ -12,7 +12,7 @@ class SignUpParams {
   });
 }
 
-UseMutationResult<void, void> useSignUp(WidgetRef ref) {
+UseMutationResult<void, void> useSignOut(WidgetRef ref) {
   final authRepository = ref.watch(authRepositoryProvider);
 
   final mutation = useMutation(

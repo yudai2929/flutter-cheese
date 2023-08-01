@@ -1,9 +1,18 @@
 import 'package:cheese_client/src/components/ui/header.dart';
 import 'package:cheese_client/src/entities/snap_post/snap_post.dart';
 import 'package:cheese_client/src/entities/snap_post/tag_options.dart';
+import 'package:cheese_client/src/hooks/domain/auth/use_sign_out.dart';
+import 'package:cheese_client/src/hooks/domain/user/use_update_user.dart';
+import 'package:cheese_client/src/hooks/helper/use_mutation.dart';
+import 'package:cheese_client/src/hooks/io/use_upload_file.dart';
+import 'package:cheese_client/src/pages/profile/profile_setting_modal.dart';
 import 'package:cheese_client/src/pages/profile/snap_post_card.dart';
 import 'package:cheese_client/src/pages/profile/use_fetch_profile.dart';
+import 'package:cheese_client/src/providers/profile_provider.dart';
+import 'package:cheese_client/src/repositories/user/params/user_params.dart';
+import 'package:cheese_client/src/router/page_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -13,8 +22,61 @@ class ProfilePage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final snapshot = useFetchProfile(ref);
+    final updateMutation = useUpdateUser(ref);
+    final signOutMutation = useSignOut(ref);
+    final fileMutation = useUploadFile(ref);
     final user = snapshot.user;
     final mySnapPosts = snapshot.mySnapPosts;
+
+    Future<void> onSubmitProfile(
+        {required String name,
+        required String imageUrl,
+        required double searchedRadiusInM}) async {
+      final params = UpdateUserParams(
+        name: name,
+        iconPath: imageUrl,
+        searchedRadiusInM: searchedRadiusInM,
+      );
+      await updateMutation.mutate(
+          params: params,
+          option: MutationOption(
+            onSuccess: (res) async {
+              snapshot.refetch();
+              if (context.mounted) context.pop();
+            },
+            onError: (e) async {
+              print(e);
+            },
+          ));
+    }
+
+    Future<void> onPressedSignOut() async {
+      print("call");
+      await signOutMutation.mutate();
+      if (context.mounted) context.go(PageRoutes.singIn);
+    }
+
+    Future<void> onPressedEditProfile(
+        {required String name,
+        required String imageUrl,
+        required double searchedRadiusInM}) async {
+      await showModalBottomSheet(
+          context: context,
+          // NOTE: trueにしないと、Containerのheightが反映されない
+          isScrollControlled: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+          ),
+          builder: (context) {
+            return ProfileSettingModal(
+                onPressedClose: () => context.pop(),
+                onPressedSignOut: onPressedSignOut,
+                onSubmit: onSubmitProfile,
+                imageUrl: imageUrl,
+                userName: name,
+                searchedRadiusInM: searchedRadiusInM.toInt());
+          });
+    }
 
     if (snapshot.isLoading || user == null) {
       return const Center(child: CircularProgressIndicator());
@@ -29,8 +91,11 @@ class ProfilePage extends HookConsumerWidget {
             _profile(userName: user.name, imageUrl: user.iconPath),
             const SizedBox(height: 8.0),
             _editButton(
-              onPressed: () {},
-            ),
+                onPressed: () => onPressedEditProfile(
+                      name: user.name,
+                      imageUrl: user.iconPath,
+                      searchedRadiusInM: user.searchedRadiusInM.toDouble(),
+                    )),
             const SizedBox(height: 16.0),
             _tabButtons(
               onPressedMine: () {},

@@ -42,7 +42,9 @@ class ProfileRegistrationPage extends HookConsumerWidget {
               if (e.toString() == CustomException.alreadyExists().toString()) {
                 await refreshUser();
                 if (context.mounted) context.go(PageRoutes.home);
+                return;
               }
+              print(e);
             },
           ));
     }

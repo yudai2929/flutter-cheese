@@ -11,6 +11,7 @@ class ProfileResult {
   final List<SnapPost> favoriteSnapPosts;
   final bool isLoading;
   final bool hasError;
+  final void Function() refetch;
 
   ProfileResult({
     required this.user,
@@ -18,6 +19,7 @@ class ProfileResult {
     required this.favoriteSnapPosts,
     required this.isLoading,
     required this.hasError,
+    required this.refetch,
   });
 }
 
@@ -36,5 +38,6 @@ ProfileResult useFetchProfile(WidgetRef ref) {
     favoriteSnapPosts: [],
     isLoading: isLoading,
     hasError: hasError,
+    refetch: userSnapshot.refetch,
   );
 }

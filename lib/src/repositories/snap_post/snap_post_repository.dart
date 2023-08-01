@@ -3,5 +3,11 @@ import 'package:cheese_client/src/repositories/snap_post/params/snap_post_params
 
 abstract class SnapPostRepository {
   Future<List<SnapPost>> fetchMy();
+  Future<List<SnapPost>> fetchLiked();
+  Future<SnapPost> fetch(FetchSnapPostParams params);
+  Future<List<SnapPost>> fetchNearby(FetchNearbySnapPostsParams params);
+  Future<void> like(LikeSnapPostParams params);
   Future<void> create(CreateSnapPostParams params);
+  Future<void> update(UpdateSnapPostParams params);
+  Future<void> delete(DeleteSnapPostParams params);
 }

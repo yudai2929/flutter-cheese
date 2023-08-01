@@ -5,8 +5,7 @@ class UseMutationResult<T, P> {
   final T? data;
   final bool isLoading;
   final Exception? error;
-  final Future<void> Function({required P params, MutationOption<T>? option})
-      mutate;
+  final Future<void> Function({P params, MutationOption<T>? option}) mutate;
   final bool hasError;
 
   UseMutationResult({
@@ -38,7 +37,7 @@ UseMutationResult<T, P> useMutation<T, P>({
   final error = useState<Exception?>(null);
   final hasError = useState(false);
 
-  Future<void> mutate({required params, MutationOption<T>? option}) async {
+  Future<void> mutate({params, MutationOption<T>? option}) async {
     isLoading.value = true;
     error.value = null;
     hasError.value = false;

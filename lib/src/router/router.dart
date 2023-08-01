@@ -8,6 +8,7 @@ import 'package:cheese_client/src/pages/sing_up/sing_up_page.dart';
 import 'package:cheese_client/src/pages/snap_post_submit/snap_post_submit_page.dart';
 import 'package:cheese_client/src/providers/auth_provider.dart';
 import 'package:cheese_client/src/providers/profile_provider.dart';
+import 'package:cheese_client/src/repositories/auth/auth_repository_provider.dart';
 import 'package:cheese_client/src/router/page_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
