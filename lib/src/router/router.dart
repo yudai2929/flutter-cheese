@@ -6,6 +6,7 @@ import 'package:cheese_client/src/pages/route/route_page.dart';
 import 'package:cheese_client/src/pages/sign_in/sign_in_page.dart';
 import 'package:cheese_client/src/pages/sing_up/sing_up_page.dart';
 import 'package:cheese_client/src/pages/snap_post_submit/snap_post_submit_page.dart';
+import 'package:cheese_client/src/pages/snap_route_submit/snap_route_submit.page.dart';
 import 'package:cheese_client/src/providers/auth_provider.dart';
 import 'package:cheese_client/src/providers/profile_provider.dart';
 import 'package:cheese_client/src/repositories/auth/auth_repository_provider.dart';
@@ -41,6 +42,9 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         GoRoute(
             path: PageRoutes.profileRegistration,
             builder: (context, state) => const ProfileRegistrationPage()),
+        GoRoute(
+            path: PageRoutes.routeSubmit,
+            builder: (context, state) => const SnapRouteSubmitPage()),
         ShellRoute(
           // navigatorKey: _shellNavigatorKey,
           builder: (BuildContext context, GoRouterState state, Widget child) {

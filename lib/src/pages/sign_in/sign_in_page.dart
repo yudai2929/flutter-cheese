@@ -1,4 +1,4 @@
-import 'package:cheese_client/src/components/ui/page_loadiing.dart';
+import 'package:cheese_client/src/components/ui/page_loading.dart';
 import 'package:cheese_client/src/constants/logo_image_path.dart';
 import 'package:cheese_client/src/hooks/domain/auth/use_sign_in.dart';
 import 'package:cheese_client/src/hooks/helper/use_mutation.dart';
