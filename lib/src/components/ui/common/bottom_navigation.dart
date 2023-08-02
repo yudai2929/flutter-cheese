@@ -21,6 +21,7 @@ class BottomNavigation extends HookConsumerWidget {
     final pageState = ref.watch(pageProvider);
 
     void onItemTapped(BuildContext context, int index) {
+      if (pageState == _pages[index]) return;
       ref.read(pageProvider.notifier).setPage(_pages[index]);
       context.push(_pages[index]);
     }
