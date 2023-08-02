@@ -1,5 +1,6 @@
 import 'package:cheese_client/src/common/option.dart';
 import 'package:cheese_client/src/components/ui/header.dart';
+import 'package:cheese_client/src/components/ui/aspect_ratio_image.dart';
 import 'package:cheese_client/src/constants/lat_lng.dart';
 import 'package:cheese_client/src/entities/snap_post/tag_options.dart';
 import 'package:cheese_client/src/hooks/domain/address/use_search_address.dart';
@@ -264,18 +265,9 @@ class SnapPostSubmitPage extends HookConsumerWidget {
         scrollDirection: Axis.horizontal,
         itemCount: imageUrls.length,
         itemBuilder: (BuildContext context, int index) {
-          return Container(
-            width: 100,
-            height: 100,
-            margin: const EdgeInsets.all(8.0),
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(imageUrls[index]),
-                fit: BoxFit.cover,
-              ),
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-          );
+          return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: AspectRatioImage(image: imageUrls[index]));
         },
       ),
     );

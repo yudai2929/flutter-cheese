@@ -1,3 +1,5 @@
+import 'package:cheese_client/src/components/ui/page_loadiing.dart';
+import 'package:cheese_client/src/constants/logo_image_path.dart';
 import 'package:cheese_client/src/hooks/domain/auth/use_sign_in.dart';
 import 'package:cheese_client/src/hooks/helper/use_mutation.dart';
 import 'package:cheese_client/src/pages/sign_in/sing_in_modal.dart';
@@ -6,8 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-const logoPath = 'assets/images/cheese_logo.png';
 
 class SignInPage extends HookConsumerWidget {
   const SignInPage({super.key});
@@ -65,7 +65,7 @@ class SignInPage extends HookConsumerWidget {
           });
     }
 
-    if (mutation.isLoading) return const CircularProgressIndicator();
+    if (mutation.isLoading) return const PageLoading();
 
     return Scaffold(
         backgroundColor: Colors.white,

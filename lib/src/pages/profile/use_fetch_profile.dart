@@ -26,16 +26,26 @@ class ProfileResult {
 ProfileResult useFetchProfile(WidgetRef ref) {
   final userSnapshot = useFetchMyUser(ref);
   final snapPostSnapshot = useFetchMySnapPosts(ref);
+  final likedSnapPostsSnapshot = useFetchLikedSnapPosts(ref);
+
   final isLoading = useMemoized(
-      () => userSnapshot.isLoading || snapPostSnapshot.isLoading,
+      () =>
+          userSnapshot.isLoading ||
+          snapPostSnapshot.isLoading ||
+          likedSnapPostsSnapshot.isLoading,
       [userSnapshot, snapPostSnapshot]);
+
   final hasError = useMemoized(
-      () => userSnapshot.hasError || snapPostSnapshot.hasError,
+      () =>
+          userSnapshot.hasError ||
+          snapPostSnapshot.hasError ||
+          likedSnapPostsSnapshot.hasError,
       [userSnapshot, snapPostSnapshot]);
+
   return ProfileResult(
     user: userSnapshot.data,
     mySnapPosts: snapPostSnapshot.data ?? [],
-    favoriteSnapPosts: [],
+    favoriteSnapPosts: likedSnapPostsSnapshot.data ?? [],
     isLoading: isLoading,
     hasError: hasError,
     refetch: userSnapshot.refetch,

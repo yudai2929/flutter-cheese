@@ -30,8 +30,8 @@ class SnapPostRepositoryImpl implements SnapPostRepository {
 
   @override
   Future<List<SnapPost>> fetchNearby(FetchNearbySnapPostsParams params) async {
-    final List data =
-        await _firebaseFunctionsApi.execute('fetchNearbySnapPosts');
+    final List data = await _firebaseFunctionsApi
+        .execute('fetchNearbySnapPosts', param: params.toJson());
     return data.map<SnapPost>((e) => SnapPost.fromJson(e)).toList();
   }
 

@@ -1,124 +1,87 @@
 import 'package:cheese_client/src/components/ui/header.dart';
+import 'package:cheese_client/src/components/ui/page_error.dart';
+import 'package:cheese_client/src/components/ui/page_loading.dart';
+import 'package:cheese_client/src/constants/lat_lng.dart';
+import 'package:cheese_client/src/entities/snap_post/snap_post.dart';
+import 'package:cheese_client/src/hooks/domain/snap_post/use_fetch_snap_post.dart';
+import 'package:cheese_client/src/hooks/domain/snap_post/use_like_snap_post.dart';
+import 'package:cheese_client/src/hooks/helper/use_mutation.dart';
+import 'package:cheese_client/src/pages/home/swipe_snap_post_card.dart';
+import 'package:cheese_client/src/repositories/snap_post/params/snap_post_params.dart';
 import 'package:flutter/material.dart';
 import 'package:appinio_swiper/appinio_swiper.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-const crossImagePath = 'assets/images/cross.png';
-const heartImagePath = 'assets/images/heart.png';
-
-const dummyImg = 'https://picsum.photos/200';
-const dummyTitle = '猫カフェ mocha 名古屋栄店';
-
-class HomePage extends StatefulWidget {
+class HomePage extends HookConsumerWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomeScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final AppinioSwiperController controller =
+        useMemoized(() => AppinioSwiperController(), []);
+    final snapshot = useFetchNearbySnapPosts(
+        ref,
+        FetchNearbySnapPostsParams(
+            longitude: tokyoLatLng.longitude, latitude: tokyoLatLng.latitude));
+    final snapPosts = snapshot.data ?? [];
+    final likedSnapPosts = useState<List<SnapPost>>([]);
+    final mutation = useLikeSnapPost(ref);
 
-class _HomeScreenState extends State<HomePage> {
-  bool _canSwipe = false;
+    void like(int index) {
+      print(index);
+      likedSnapPosts.value = [...likedSnapPosts.value, snapPosts[index - 1]];
+    }
 
-  @override
-  Widget build(BuildContext context) {
+    void onSwipe(int index, AppinioSwiperDirection direction) {
+      if (direction == AppinioSwiperDirection.right) return like(index);
+      if (direction == AppinioSwiperDirection.left) return;
+      // TODO: 上や下にスワイプした場合の処理をかく
+    }
+
+    Future<void> onEnd() async {
+      final params = LikeSnapPostParams(
+          snapPostIds: likedSnapPosts.value.map((e) => e.snapPostId).toList());
+      mutation.mutate(
+          params: params,
+          option: MutationOption(
+            onSuccess: (_) => print('success'),
+            onError: (e) => print(e),
+          ));
+    }
+
+    void onPressedLike(int index) {
+      controller.swipeRight();
+    }
+
+    void onPressedDislike() {
+      controller.swipeLeft();
+    }
+
+    if (snapshot.isLoading) return const PageLoading();
+
+    if (snapshot.hasError) return const PageError();
+
     return Scaffold(
       appBar: const Header(title: ""),
       body: AppinioSwiper(
-        cardsCount: 10,
-        backgroundCardsCount: 1,
-        // isDisabled: !_canSwipe,
-        allowUnswipe: _canSwipe,
+        controller: controller,
+        cardsCount: snapPosts.length,
+        backgroundCardsCount: snapPosts.length,
         padding: const EdgeInsets.all(16.0),
-        onSwipe: (int index, AppinioSwiperDirection direction) {
-          print(direction.toString());
-        },
-        onSwiping: (AppinioSwiperDirection direction) {
-          final isSwipingRight = direction == AppinioSwiperDirection.right;
-          final isSwipingLeft = direction == AppinioSwiperDirection.left;
-          setState(() {
-            _canSwipe = isSwipingRight || isSwipingLeft;
-          });
-        },
+        onSwipe: onSwipe,
+        onEnd: onEnd,
+        maxAngle: 0,
         cardsBuilder: (BuildContext context, int index) {
-          return Card(
-            shape: const RoundedRectangleBorder(
-              // アンダーラインを引く
-              borderRadius: BorderRadius.all(Radius.circular(16.0)),
-            ),
-            color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(dummyTitle,
-                        style: TextStyle(
-                            fontSize: 20.0, fontWeight: FontWeight.bold)),
-                    const Text("マップで表示", style: TextStyle(color: Colors.blue)),
-                    const SizedBox(height: 16.0),
-                    Wrap(
-                      spacing: 10,
-                      children: [
-                        SizedBox(
-                            height: 72.0,
-                            child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: Image.network(
-                                  dummyImg,
-                                  fit: BoxFit.cover,
-                                ))),
-                        SizedBox(
-                            height: 72.0,
-                            child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: Image.network(
-                                  dummyImg,
-                                  fit: BoxFit.cover,
-                                ))),
-                        SizedBox(
-                            height: 72.0,
-                            child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: Image.network(
-                                  dummyImg,
-                                  fit: BoxFit.cover,
-                                ))),
-                      ],
-                    ),
-                    const SizedBox(height: 16.0),
-                    SizedBox(
-                        width: double.infinity,
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: Image.network(
-                              dummyImg,
-                              fit: BoxFit.cover,
-                            ))),
-                    const SizedBox(height: 16.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                              shape: const CircleBorder(),
-                              backgroundColor: Colors.white,
-                              shadowColor: Colors.white),
-                          child: Image.asset(crossImagePath), // 画像のパスを指定
-                        ),
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                              shape: const CircleBorder(),
-                              backgroundColor: Colors.white,
-                              shadowColor: Colors.white),
-                          child: Image.asset(heartImagePath), // 画像のパスを指定
-                        ),
-                      ],
-                    )
-                  ]),
-            ),
-          );
+          final images =
+              snapPosts[index].postImages.map((e) => e.imagePath).toList();
+          return SwipeSnapPostCard(
+              onPressedLike: () => onPressedLike(index),
+              onPressedDislike: onPressedDislike,
+              title: snapPosts[index].title,
+              address: snapPosts[index].address,
+              // firstImage: images.first,
+              images: images);
         },
       ),
     );

@@ -1,10 +1,10 @@
 import 'package:cheese_client/src/components/ui/header.dart';
+import 'package:cheese_client/src/components/ui/page_loading.dart';
 import 'package:cheese_client/src/entities/snap_post/snap_post.dart';
 import 'package:cheese_client/src/entities/snap_post/tag_options.dart';
 import 'package:cheese_client/src/hooks/domain/auth/use_sign_out.dart';
 import 'package:cheese_client/src/hooks/domain/user/use_update_user.dart';
 import 'package:cheese_client/src/hooks/helper/use_mutation.dart';
-import 'package:cheese_client/src/hooks/io/use_upload_file.dart';
 import 'package:cheese_client/src/pages/profile/profile_setting_modal.dart';
 import 'package:cheese_client/src/pages/profile/snap_post_card.dart';
 import 'package:cheese_client/src/pages/profile/use_fetch_profile.dart';
@@ -12,9 +12,12 @@ import 'package:cheese_client/src/providers/profile_provider.dart';
 import 'package:cheese_client/src/repositories/user/params/user_params.dart';
 import 'package:cheese_client/src/router/page_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+enum Tab { mine, like }
 
 class ProfilePage extends HookConsumerWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -24,9 +27,22 @@ class ProfilePage extends HookConsumerWidget {
     final snapshot = useFetchProfile(ref);
     final updateMutation = useUpdateUser(ref);
     final signOutMutation = useSignOut(ref);
-    final fileMutation = useUploadFile(ref);
+    final selectedTab = useState(Tab.mine);
+    final displayedPosts = useMemoized(
+        () => selectedTab.value == Tab.mine
+            ? snapshot.mySnapPosts
+            : snapshot.favoriteSnapPosts,
+        [snapshot.favoriteSnapPosts, snapshot.mySnapPosts, selectedTab.value]);
+
     final user = snapshot.user;
-    final mySnapPosts = snapshot.mySnapPosts;
+
+    void onPressedMine() {
+      selectedTab.value = Tab.mine;
+    }
+
+    void onPressedLike() {
+      selectedTab.value = Tab.like;
+    }
 
     Future<void> onSubmitProfile(
         {required String name,
@@ -51,8 +67,9 @@ class ProfilePage extends HookConsumerWidget {
     }
 
     Future<void> onPressedSignOut() async {
-      print("call");
       await signOutMutation.mutate();
+      // NOTE: ログアウトしたらグローバルで管理しているプロフィールの状態をクリア
+      await ref.read(userProvider.notifier).clearUser();
       if (context.mounted) context.go(PageRoutes.singIn);
     }
 
@@ -78,9 +95,7 @@ class ProfilePage extends HookConsumerWidget {
           });
     }
 
-    if (snapshot.isLoading || user == null) {
-      return const Center(child: CircularProgressIndicator());
-    }
+    if (snapshot.isLoading || user == null) return const PageLoading();
 
     return Scaffold(
         appBar: const Header(title: "マイページ"),
@@ -98,10 +113,11 @@ class ProfilePage extends HookConsumerWidget {
                     )),
             const SizedBox(height: 16.0),
             _tabButtons(
-              onPressedMine: () {},
-              onPressedLike: () {},
+              selectedTab: selectedTab.value,
+              onPressedMine: onPressedMine,
+              onPressedLike: onPressedLike,
             ),
-            _snapPostCardList(snapPosts: mySnapPosts),
+            _snapPostCardList(snapPosts: displayedPosts),
           ]),
         ));
   }
@@ -133,20 +149,33 @@ class ProfilePage extends HookConsumerWidget {
         ));
   }
 
-  Widget _tabButtons(
-      {required VoidCallback onPressedMine,
-      required VoidCallback onPressedLike}) {
+  Widget _tabButtons({
+    required VoidCallback onPressedMine,
+    required VoidCallback onPressedLike,
+    required Tab selectedTab,
+  }) {
+    return Row(
+      children: [
+        Expanded(
+            child: _tabButton(
+                isActive: selectedTab == Tab.mine, onPressed: onPressedMine)),
+        Expanded(
+            child: _tabButton(
+                isActive: selectedTab == Tab.like, onPressed: onPressedLike)),
+      ],
+    );
+  }
+
+  Widget _tabButton({required isActive, required VoidCallback onPressed}) {
     const BorderRadius borderRadius = BorderRadius.only(
       topRight: Radius.circular(4.0),
       bottomRight: Radius.circular(0.0),
       topLeft: Radius.circular(4.0),
       bottomLeft: Radius.circular(0.0),
     );
-    return Row(
-      children: [
-        Expanded(
-          child: ElevatedButton(
-            onPressed: onPressedMine,
+    return isActive
+        ? ElevatedButton(
+            onPressed: onPressed,
             style: ElevatedButton.styleFrom(
               elevation: 0,
               shape: const RoundedRectangleBorder(
@@ -155,11 +184,9 @@ class ProfilePage extends HookConsumerWidget {
               ),
             ),
             child: const Icon(Icons.apps_sharp, color: Colors.white),
-          ),
-        ),
-        Expanded(
-          child: OutlinedButton(
-            onPressed: onPressedLike,
+          )
+        : OutlinedButton(
+            onPressed: onPressed,
             style: OutlinedButton.styleFrom(
               elevation: 0,
               shape: const RoundedRectangleBorder(
@@ -169,10 +196,7 @@ class ProfilePage extends HookConsumerWidget {
               ),
             ),
             child: const Icon(Icons.favorite_outline),
-          ),
-        ),
-      ],
-    );
+          );
   }
 
   Widget _snapPostCardList({required List<SnapPost> snapPosts}) {

@@ -25,6 +25,11 @@ class UserNotifier extends StateNotifier<User?> {
   Future<void> refreshUser() async {
     await fetchUser();
   }
+
+  // データをクリアするメソッド
+  Future<void> clearUser() async {
+    state = null;
+  }
 }
 
 // UserNotifierを提供するStateNotifierProvider
