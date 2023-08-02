@@ -227,7 +227,7 @@ class SnapPostSubmitPage extends HookConsumerWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
+              SizedBox(
                 width: 320,
                 child: Text(text,
                     overflow: TextOverflow.ellipsis,

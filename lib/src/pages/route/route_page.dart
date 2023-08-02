@@ -10,8 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-List<String> routes = ['ルート1', 'ルート2', 'ルート3'];
-
 class RoutePage extends HookConsumerWidget {
   const RoutePage({Key? key}) : super(key: key);
 
@@ -21,7 +19,11 @@ class RoutePage extends HookConsumerWidget {
     final snapRoute = snapshot.data ?? [];
 
     void onPressedAdd() {
-      context.go(PageRoutes.routeSubmit);
+      context.push(PageRoutes.routeSubmit);
+    }
+
+    Future<void> onTapedRoute(String snapRouteId) async {
+      context.push('${PageRoutes.routeDetail}/$snapRouteId');
     }
 
     if (snapshot.isLoading) return const PageLoading();
@@ -33,7 +35,8 @@ class RoutePage extends HookConsumerWidget {
       appBar: const Header(title: "ルート一覧"),
       body: Container(
         padding: const EdgeInsets.all(8.0),
-        child: _snapRouteCardList(routes: snapRoute),
+        child:
+            _snapRouteCardList(routes: snapRoute, onTapedRoute: onTapedRoute),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: onPressedAdd,
@@ -43,7 +46,9 @@ class RoutePage extends HookConsumerWidget {
     );
   }
 
-  Widget _snapRouteCardList({required List<SnapRoute> routes}) {
+  Widget _snapRouteCardList(
+      {required List<SnapRoute> routes,
+      required void Function(String) onTapedRoute}) {
     return ListView.builder(
       itemCount: routes.length,
       itemBuilder: (context, index) {
@@ -52,15 +57,21 @@ class RoutePage extends HookConsumerWidget {
         return Container(
           padding: const EdgeInsets.all(8.0),
           child: _snapRouteCard(
-            title: routes[index].title,
-            image: topImage,
-          ),
+              title: routes[index].title,
+              image: topImage,
+              onPressed: () {
+                onTapedRoute(routes[index].snapRouteId);
+              }),
         );
       },
     );
   }
 
-  Widget _snapRouteCard({required String title, required String image}) {
+  Widget _snapRouteCard({
+    required String title,
+    required String image,
+    required VoidCallback onPressed,
+  }) {
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -86,7 +97,7 @@ class RoutePage extends HookConsumerWidget {
           icon: const Icon(
             Icons.more_vert,
           ),
-          onPressed: () {},
+          onPressed: onPressed,
         )
       ]),
     );

@@ -1,6 +1,4 @@
-import 'package:cheese_client/src/entities/snap_post/post_user.dart';
 import 'package:cheese_client/src/entities/snap_post/snap_post.dart';
-import 'package:cheese_client/src/repositories/snap_post/params/snap_post_params.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'snap_route.freezed.dart';

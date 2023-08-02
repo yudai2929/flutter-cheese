@@ -28,7 +28,7 @@ class SnapRouteSubmitPage extends HookConsumerWidget {
     final mutation = useCreateSnapRoute(ref);
     final titleController = useTextEditingController();
     Future<void> onBack() async {
-      context.go(PageRoutes.route);
+      context.pop();
     }
 
     Future<void> onSubmit() async {
@@ -49,7 +49,7 @@ class SnapRouteSubmitPage extends HookConsumerWidget {
           title: '投稿',
           leading: IconButton(
             onPressed: onBack,
-            icon: const Icon(Icons.close),
+            icon: const Icon(Icons.arrow_back_ios),
             color: Colors.black,
           ),
           actions: [
