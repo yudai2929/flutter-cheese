@@ -1,4 +1,4 @@
-import 'package:cheese_client/src/components/ui/aspect_ratio_image.dart';
+import 'package:cheese_client/src/components/ui/common/aspect_ratio_image.dart';
 import 'package:cheese_client/src/entities/snap_post/snap_post.dart';
 import 'package:cheese_client/src/pages/snap_route_detail/dot_line.dart';
 import 'package:cheese_client/src/pages/snap_route_detail/rounded_number.dart';

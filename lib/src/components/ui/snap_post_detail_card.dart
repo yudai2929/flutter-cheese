@@ -4,24 +4,17 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-const crossImagePath = 'assets/images/cross.png';
-const heartImagePath = 'assets/images/heart.png';
-
-class SwipeSnapPostCard extends HookConsumerWidget {
+class SnapPostDetailCard extends HookConsumerWidget {
   final String title;
   final List<String> images;
-  // final String firstImage;
   final String address;
-  final VoidCallback onPressedLike;
-  final VoidCallback onPressedDislike;
-  const SwipeSnapPostCard({
+  final String? comment;
+  const SnapPostDetailCard({
     Key? key,
     required this.title,
     required this.images,
-    // required this.firstImage,
     required this.address,
-    required this.onPressedLike,
-    required this.onPressedDislike,
+    required this.comment,
   }) : super(key: key);
 
   @override
@@ -33,6 +26,7 @@ class SwipeSnapPostCard extends HookConsumerWidget {
     }
 
     return Card(
+      elevation: 0,
       shape: const RoundedRectangleBorder(
         // アンダーラインを引く
         borderRadius: BorderRadius.all(Radius.circular(16.0)),
@@ -59,10 +53,8 @@ class SwipeSnapPostCard extends HookConsumerWidget {
             ),
           ),
           const SizedBox(height: 16.0),
-          _likeAndDislikeButtons(
-            onPressedLike: onPressedLike,
-            onPressedDislike: onPressedDislike,
-          ),
+          Text(comment ?? "",
+              style: const TextStyle(fontWeight: FontWeight.bold)),
         ]),
       ),
     );
@@ -89,33 +81,6 @@ class SwipeSnapPostCard extends HookConsumerWidget {
                     ],
                   ))
               .toList()),
-    );
-  }
-
-  Widget _likeAndDislikeButtons({
-    required VoidCallback onPressedLike,
-    required VoidCallback onPressedDislike,
-  }) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        ElevatedButton(
-          onPressed: onPressedDislike,
-          style: ElevatedButton.styleFrom(
-              shape: const CircleBorder(),
-              backgroundColor: Colors.white,
-              shadowColor: Colors.white),
-          child: Image.asset(crossImagePath), // 画像のパスを指定
-        ),
-        ElevatedButton(
-          onPressed: onPressedLike,
-          style: ElevatedButton.styleFrom(
-              shape: const CircleBorder(),
-              backgroundColor: Colors.white,
-              shadowColor: Colors.white),
-          child: Image.asset(heartImagePath), // 画像のパスを指定
-        ),
-      ],
     );
   }
 }

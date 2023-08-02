@@ -1,4 +1,4 @@
-import 'package:cheese_client/src/components/ui/header.dart';
+import 'package:cheese_client/src/components/ui/common/header.dart';
 import 'package:cheese_client/src/hooks/domain/auth/use_sign_up.dart';
 import 'package:cheese_client/src/hooks/helper/use_form_key.dart';
 import 'package:cheese_client/src/hooks/helper/use_mutation.dart';

@@ -1,6 +1,6 @@
 import 'package:cheese_client/src/common/option.dart';
-import 'package:cheese_client/src/components/ui/header.dart';
-import 'package:cheese_client/src/components/ui/aspect_ratio_image.dart';
+import 'package:cheese_client/src/components/ui/common/header.dart';
+import 'package:cheese_client/src/components/ui/common/aspect_ratio_image.dart';
 import 'package:cheese_client/src/constants/lat_lng.dart';
 import 'package:cheese_client/src/entities/snap_post/tag_options.dart';
 import 'package:cheese_client/src/hooks/domain/address/use_search_address.dart';

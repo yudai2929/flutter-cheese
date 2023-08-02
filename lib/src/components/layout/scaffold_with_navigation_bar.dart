@@ -1,4 +1,4 @@
-import 'package:cheese_client/src/components/ui/bottom_navigation.dart';
+import 'package:cheese_client/src/components/ui/common/bottom_navigation.dart';
 import 'package:flutter/material.dart';
 
 class ScaffoldWithNavigationBar extends StatelessWidget {

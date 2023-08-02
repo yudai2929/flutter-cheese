@@ -1,5 +1,5 @@
-import 'package:cheese_client/src/components/ui/header.dart';
-import 'package:cheese_client/src/components/ui/page_loading.dart';
+import 'package:cheese_client/src/components/ui/common/header.dart';
+import 'package:cheese_client/src/components/ui/common/page_loading.dart';
 import 'package:cheese_client/src/entities/snap_post/snap_post.dart';
 import 'package:cheese_client/src/entities/snap_post/tag_options.dart';
 import 'package:cheese_client/src/hooks/domain/auth/use_sign_out.dart';
@@ -11,6 +11,7 @@ import 'package:cheese_client/src/pages/profile/use_fetch_profile.dart';
 import 'package:cheese_client/src/providers/profile_provider.dart';
 import 'package:cheese_client/src/repositories/user/params/user_params.dart';
 import 'package:cheese_client/src/router/page_routes.dart';
+import 'package:cheese_client/src/styles/custom_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -42,6 +43,15 @@ class ProfilePage extends HookConsumerWidget {
 
     void onPressedLike() {
       selectedTab.value = Tab.like;
+    }
+
+    void onTapCard(String snapPostId) {
+      if (selectedTab.value == Tab.mine) {
+        context.push('${PageRoutes.profilePostDetail}/$snapPostId');
+      } else {
+        print("call");
+        context.push('${PageRoutes.snapPostDetail}/$snapPostId');
+      }
     }
 
     Future<void> onSubmitProfile(
@@ -117,7 +127,11 @@ class ProfilePage extends HookConsumerWidget {
               onPressedMine: onPressedMine,
               onPressedLike: onPressedLike,
             ),
-            _snapPostCardList(snapPosts: displayedPosts),
+            Container(
+              color: CheeseColor.bgColor,
+              child: _snapPostCardList(
+                  snapPosts: displayedPosts, onTapCard: onTapCard),
+            ),
           ]),
         ));
   }
@@ -199,7 +213,9 @@ class ProfilePage extends HookConsumerWidget {
           );
   }
 
-  Widget _snapPostCardList({required List<SnapPost> snapPosts}) {
+  Widget _snapPostCardList(
+      {required List<SnapPost> snapPosts,
+      required void Function(String) onTapCard}) {
     return GridView.count(
       // NOTE: GridViewの中でのアイテムのサイズを指定
       childAspectRatio: 0.7,
@@ -210,10 +226,14 @@ class ProfilePage extends HookConsumerWidget {
       // NOTE: GridViewのスクロールを無効化
       physics: const NeverScrollableScrollPhysics(),
       children: snapPosts
-          .map((post) => SnapPostCard(
-                title: post.title,
-                tags: post.tags.map((e) => tagOptions.valueToLabel(e)).toList(),
-                imageUrl: post.postImages.first.imagePath,
+          .map((post) => InkWell(
+                onTap: () => onTapCard(post.snapPostId),
+                child: SnapPostCard(
+                  title: post.title,
+                  tags:
+                      post.tags.map((e) => tagOptions.valueToLabel(e)).toList(),
+                  imageUrl: post.postImages.first.imagePath,
+                ),
               ))
           .toList(),
     );

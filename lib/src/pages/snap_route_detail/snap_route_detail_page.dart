@@ -1,5 +1,5 @@
-import 'package:cheese_client/src/components/ui/page_error.dart';
-import 'package:cheese_client/src/components/ui/page_loading.dart';
+import 'package:cheese_client/src/components/ui/common/page_error.dart';
+import 'package:cheese_client/src/components/ui/common/page_loading.dart';
 import 'package:cheese_client/src/hooks/domain/snap_route/use_fetch_snap_post.dart';
 import 'package:cheese_client/src/pages/snap_route_detail/map_page.dart';
 import 'package:cheese_client/src/pages/snap_route_detail/route_detail.dart';

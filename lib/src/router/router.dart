@@ -2,9 +2,11 @@ import 'package:cheese_client/src/components/layout/scaffold_with_navigation_bar
 import 'package:cheese_client/src/pages/map/map_page.dart';
 import 'package:cheese_client/src/pages/profile/profile_page.dart';
 import 'package:cheese_client/src/pages/profile_register/profile_registration_page.dart';
+import 'package:cheese_client/src/pages/profile_snap_post_detail/prolie_snap_post_detail_page.dart';
 import 'package:cheese_client/src/pages/route/route_page.dart';
 import 'package:cheese_client/src/pages/sign_in/sign_in_page.dart';
 import 'package:cheese_client/src/pages/sing_up/sing_up_page.dart';
+import 'package:cheese_client/src/pages/snap_post_detail/prolie_snap_post_detail_page.dart';
 import 'package:cheese_client/src/pages/snap_post_submit/snap_post_submit_page.dart';
 import 'package:cheese_client/src/pages/snap_route_detail/snap_route_detail_page.dart';
 import 'package:cheese_client/src/pages/snap_route_submit/snap_route_submit.page.dart';
@@ -27,6 +29,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authProvider);
   final userState = ref.watch(userProvider);
 
+  // NOTE: うまくいかに時はここをコメントアウトして、強制ログアウトしてください
   // final rpo = ref.watch(authRepositoryProvider);
   // rpo.signOut();
 
@@ -50,6 +53,14 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             path: '${PageRoutes.routeDetail}/:snapRouteId',
             builder: (context, state) => SnapRouteDetailPage(
                 snapRouteId: state.pathParameters['snapRouteId']!)),
+        GoRoute(
+            path: '${PageRoutes.profilePostDetail}/:snapPostId',
+            builder: (context, state) => ProfileSnapPostDetailPage(
+                snapPostId: state.pathParameters['snapPostId']!)),
+        GoRoute(
+            path: '${PageRoutes.snapPostDetail}/:snapPostId',
+            builder: (context, state) => SnapPostDetailPage(
+                snapPostId: state.pathParameters['snapPostId']!)),
         ShellRoute(
           // navigatorKey: _shellNavigatorKey,
           builder: (BuildContext context, GoRouterState state, Widget child) {

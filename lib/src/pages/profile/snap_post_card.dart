@@ -14,14 +14,21 @@ class SnapPostCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 0,
       color: Colors.grey[50],
       child: Column(
         children: [
-          AspectRatio(
-            aspectRatio: 1.0,
-            child: Image.network(
-              imageUrl,
-              fit: BoxFit.cover,
+          ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(4.0),
+              topRight: Radius.circular(4.0),
+            ),
+            child: AspectRatio(
+              aspectRatio: 1.0,
+              child: Image.network(
+                imageUrl,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           ListTile(

@@ -1,4 +1,4 @@
-import 'package:cheese_client/src/components/ui/header.dart';
+import 'package:cheese_client/src/components/ui/common/header.dart';
 import 'package:cheese_client/src/exceptions/custom_exception.dart';
 import 'package:cheese_client/src/hooks/domain/user/use_create_user.dart';
 import 'package:cheese_client/src/hooks/helper/use_mutation.dart';

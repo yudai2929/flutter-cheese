@@ -1,4 +1,4 @@
-import 'package:cheese_client/src/components/ui/header.dart';
+import 'package:cheese_client/src/components/ui/common/header.dart';
 import 'package:cheese_client/src/hooks/domain/snap_route/use_create_snap_route.dart';
 import 'package:cheese_client/src/hooks/helper/use_mutation.dart';
 import 'package:cheese_client/src/repositories/snap_route/params/snap_route_params.dart';

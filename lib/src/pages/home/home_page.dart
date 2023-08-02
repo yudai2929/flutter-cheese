@@ -1,6 +1,6 @@
-import 'package:cheese_client/src/components/ui/header.dart';
-import 'package:cheese_client/src/components/ui/page_error.dart';
-import 'package:cheese_client/src/components/ui/page_loading.dart';
+import 'package:cheese_client/src/components/ui/common/header.dart';
+import 'package:cheese_client/src/components/ui/common/page_error.dart';
+import 'package:cheese_client/src/components/ui/common/page_loading.dart';
 import 'package:cheese_client/src/constants/lat_lng.dart';
 import 'package:cheese_client/src/entities/snap_post/snap_post.dart';
 import 'package:cheese_client/src/hooks/domain/snap_post/use_fetch_snap_post.dart';
@@ -8,6 +8,7 @@ import 'package:cheese_client/src/hooks/domain/snap_post/use_like_snap_post.dart
 import 'package:cheese_client/src/hooks/helper/use_mutation.dart';
 import 'package:cheese_client/src/pages/home/swipe_snap_post_card.dart';
 import 'package:cheese_client/src/repositories/snap_post/params/snap_post_params.dart';
+import 'package:cheese_client/src/styles/custom_color.dart';
 import 'package:flutter/material.dart';
 import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -63,6 +64,7 @@ class HomePage extends HookConsumerWidget {
     if (snapshot.hasError) return const PageError();
 
     return Scaffold(
+      backgroundColor: CheeseColor.bgColor,
       appBar: const Header(title: ""),
       body: AppinioSwiper(
         controller: controller,

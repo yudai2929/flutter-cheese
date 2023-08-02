@@ -1,7 +1,7 @@
-import 'package:cheese_client/src/components/ui/aspect_ratio_image.dart';
-import 'package:cheese_client/src/components/ui/header.dart';
-import 'package:cheese_client/src/components/ui/page_error.dart';
-import 'package:cheese_client/src/components/ui/page_loading.dart';
+import 'package:cheese_client/src/components/ui/common/aspect_ratio_image.dart';
+import 'package:cheese_client/src/components/ui/common/header.dart';
+import 'package:cheese_client/src/components/ui/common/page_error.dart';
+import 'package:cheese_client/src/components/ui/common/page_loading.dart';
 import 'package:cheese_client/src/entities/snap_route/snap_route.dart';
 import 'package:cheese_client/src/hooks/domain/snap_route/use_fetch_snap_post.dart';
 import 'package:cheese_client/src/router/page_routes.dart';
